@@ -10,15 +10,31 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as CategoriesRouteImport } from './routes/categories'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AnimeIndexRouteImport } from './routes/anime.index'
 import { Route as AnimeSlugRouteImport } from './routes/anime.$slug'
+import { Route as ClipsSlugRouteImport } from './routes/clips.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrowseRoute = BrowseRouteImport.update({
@@ -31,9 +47,24 @@ const CategoriesRoute = CategoriesRouteImport.update({
   path: '/categories',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnimeIndexRoute = AnimeIndexRouteImport.update({
@@ -46,54 +77,112 @@ const AnimeSlugRoute = AnimeSlugRouteImport.update({
   path: '/anime/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClipsSlugRoute = ClipsSlugRouteImport.update({
+  id: '/clips/$slug',
+  path: '/clips/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/browse': typeof BrowseRoute
   '/categories': typeof CategoriesRoute
+  '/contact': typeof ContactRoute
+  '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
+  '/terms': typeof TermsRoute
   '/anime/$slug': typeof AnimeSlugRoute
+  '/clips/$slug': typeof ClipsSlugRoute
   '/anime/': typeof AnimeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/browse': typeof BrowseRoute
   '/categories': typeof CategoriesRoute
+  '/contact': typeof ContactRoute
+  '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
+  '/terms': typeof TermsRoute
   '/anime/$slug': typeof AnimeSlugRoute
+  '/clips/$slug': typeof ClipsSlugRoute
   '/anime': typeof AnimeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/browse': typeof BrowseRoute
   '/categories': typeof CategoriesRoute
+  '/contact': typeof ContactRoute
+  '/privacy': typeof PrivacyRoute
   '/search': typeof SearchRoute
+  '/terms': typeof TermsRoute
   '/anime/$slug': typeof AnimeSlugRoute
+  '/clips/$slug': typeof ClipsSlugRoute
   '/anime/': typeof AnimeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/browse' | '/categories' | '/search' | '/anime/$slug' | '/anime/'
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/browse'
+    | '/categories'
+    | '/contact'
+    | '/privacy'
+    | '/search'
+    | '/terms'
+    | '/anime/$slug'
+    | '/clips/$slug'
+    | '/anime/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/browse' | '/categories' | '/search' | '/anime/$slug' | '/anime'
+  to:
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/browse'
+    | '/categories'
+    | '/contact'
+    | '/privacy'
+    | '/search'
+    | '/terms'
+    | '/anime/$slug'
+    | '/clips/$slug'
+    | '/anime'
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/admin'
     | '/browse'
     | '/categories'
+    | '/contact'
+    | '/privacy'
     | '/search'
+    | '/terms'
     | '/anime/$slug'
+    | '/clips/$slug'
     | '/anime/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRoute
   BrowseRoute: typeof BrowseRoute
   CategoriesRoute: typeof CategoriesRoute
+  ContactRoute: typeof ContactRoute
+  PrivacyRoute: typeof PrivacyRoute
   SearchRoute: typeof SearchRoute
+  TermsRoute: typeof TermsRoute
   AnimeSlugRoute: typeof AnimeSlugRoute
+  ClipsSlugRoute: typeof ClipsSlugRoute
   AnimeIndexRoute: typeof AnimeIndexRoute
 }
 
@@ -104,6 +193,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/browse': {
@@ -120,11 +223,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/anime/': {
@@ -141,15 +265,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnimeSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/clips/$slug': {
+      id: '/clips/$slug'
+      path: '/clips/$slug'
+      fullPath: '/clips/$slug'
+      preLoaderRoute: typeof ClipsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  AdminRoute: AdminRoute,
   BrowseRoute: BrowseRoute,
   CategoriesRoute: CategoriesRoute,
+  ContactRoute: ContactRoute,
+  PrivacyRoute: PrivacyRoute,
   SearchRoute: SearchRoute,
+  TermsRoute: TermsRoute,
   AnimeSlugRoute: AnimeSlugRoute,
+  ClipsSlugRoute: ClipsSlugRoute,
   AnimeIndexRoute: AnimeIndexRoute,
 }
 export const routeTree = rootRouteImport

@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { formatDuration } from "@/data/repository";
 import type { Clip } from "@/data/types";
 
-export function ClipCard({ clip, animeName }: { clip: Clip; animeName?: string }) {
+export function ClipCard({ clip, animeName }: { clip: Clip; animeName?: string | undefined }) {
   return (
     <article className="group overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_20px_50px_-24px_var(--primary)]">
       <Link to="/clips/$slug" params={{ slug: clip.slug }} className="block">
