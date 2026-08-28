@@ -10,33 +10,91 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BrowseRouteImport } from './routes/browse'
+import { Route as CategoriesRouteImport } from './routes/categories'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as AnimeIndexRouteImport } from './routes/anime.index'
+import { Route as AnimeSlugRouteImport } from './routes/anime.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrowseRoute = BrowseRouteImport.update({
+  id: '/browse',
+  path: '/browse',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriesRoute = CategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnimeIndexRoute = AnimeIndexRouteImport.update({
+  id: '/anime/',
+  path: '/anime/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnimeSlugRoute = AnimeSlugRouteImport.update({
+  id: '/anime/$slug',
+  path: '/anime/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/browse': typeof BrowseRoute
+  '/categories': typeof CategoriesRoute
+  '/search': typeof SearchRoute
+  '/anime/$slug': typeof AnimeSlugRoute
+  '/anime/': typeof AnimeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/browse': typeof BrowseRoute
+  '/categories': typeof CategoriesRoute
+  '/search': typeof SearchRoute
+  '/anime/$slug': typeof AnimeSlugRoute
+  '/anime': typeof AnimeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/browse': typeof BrowseRoute
+  '/categories': typeof CategoriesRoute
+  '/search': typeof SearchRoute
+  '/anime/$slug': typeof AnimeSlugRoute
+  '/anime/': typeof AnimeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/browse' | '/categories' | '/search' | '/anime/$slug' | '/anime/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/browse' | '/categories' | '/search' | '/anime/$slug' | '/anime'
+  id:
+    | '__root__'
+    | '/'
+    | '/browse'
+    | '/categories'
+    | '/search'
+    | '/anime/$slug'
+    | '/anime/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BrowseRoute: typeof BrowseRoute
+  CategoriesRoute: typeof CategoriesRoute
+  SearchRoute: typeof SearchRoute
+  AnimeSlugRoute: typeof AnimeSlugRoute
+  AnimeIndexRoute: typeof AnimeIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +106,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/browse': {
+      id: '/browse'
+      path: '/browse'
+      fullPath: '/browse'
+      preLoaderRoute: typeof BrowseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categories': {
+      id: '/categories'
+      path: '/categories'
+      fullPath: '/categories'
+      preLoaderRoute: typeof CategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/anime/': {
+      id: '/anime/'
+      path: '/anime'
+      fullPath: '/anime/'
+      preLoaderRoute: typeof AnimeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/anime/$slug': {
+      id: '/anime/$slug'
+      path: '/anime/$slug'
+      fullPath: '/anime/$slug'
+      preLoaderRoute: typeof AnimeSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BrowseRoute: BrowseRoute,
+  CategoriesRoute: CategoriesRoute,
+  SearchRoute: SearchRoute,
+  AnimeSlugRoute: AnimeSlugRoute,
+  AnimeIndexRoute: AnimeIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
