@@ -13,6 +13,7 @@ import clip6 from "@/assets/clip-6.jpg";
 import type { Anime, Category, Clip } from "./types";
 
 const art = [clip1, clip2, clip3, clip4, clip5, clip6];
+const pick = (i: number): string => art[((i % art.length) + art.length) % art.length] as string;
 
 export const sampleCategories: Category[] = [
   { id: "c1", name: "Fights", slug: "fights", description: "Combat exchanges and duels." },
@@ -37,7 +38,7 @@ export const sampleAnime: Anime[] = [
     slug: "sample-series-alpha",
     aliases: ["SSA"],
     description: "Placeholder series entry used to demonstrate the anime directory layout.",
-    artwork: art[2],
+    artwork: pick(2),
   },
   {
     id: "a2",
@@ -45,7 +46,7 @@ export const sampleAnime: Anime[] = [
     slug: "sample-series-beta",
     aliases: ["SSB"],
     description: "Placeholder series entry used to demonstrate the anime directory layout.",
-    artwork: art[4],
+    artwork: pick(4),
   },
   {
     id: "a3",
@@ -53,7 +54,7 @@ export const sampleAnime: Anime[] = [
     slug: "sample-series-gamma",
     aliases: ["SSG"],
     description: "Placeholder series entry used to demonstrate the anime directory layout.",
-    artwork: art[5],
+    artwork: pick(5),
   },
 ];
 
@@ -76,7 +77,7 @@ function makeClip(
   duration: number,
   resolution: Clip["resolution"],
 ): Clip {
-  const thumb = art[i % art.length];
+  const thumb = pick(i);
   const day = String(28 - i).padStart(2, "0");
   return {
     ...base,
@@ -92,7 +93,7 @@ function makeClip(
     tags,
     categorySlug,
     thumbnail: thumb,
-    screenshots: [thumb, art[(i + 1) % art.length], art[(i + 2) % art.length]],
+    screenshots: [thumb, pick(i + 1), pick(i + 2)],
     duration,
     resolution,
     createdAt: `2026-08-${day}T12:00:00.000Z`,
