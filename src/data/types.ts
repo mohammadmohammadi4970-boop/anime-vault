@@ -1,9 +1,8 @@
 /**
  * Domain model for Kuragawa Clips.
  *
- * These types mirror the future database tables (clips, anime, categories).
- * The public site reads through `src/data/repository.ts` only, so swapping the
- * in-memory sample source for Lovable Cloud requires no component changes.
+ * These types mirror the database tables (clips, anime, categories).
+ * The public site reads through `src/data/repository.ts` only.
  */
 
 export type ClipQuality = "1080p" | "4K" | "720p" | "Raw";
@@ -22,7 +21,7 @@ export interface Clip {
   screenshots: string[];
   /** seconds */
   duration: number;
-  resolution: ClipQuality;
+  resolution: string;
   format: string;
   /** External (e.g. Google Drive) URL. Never hardcoded in the UI. */
   downloadUrl: string;
@@ -57,4 +56,26 @@ export interface ClipQuery {
   quality?: string;
   sort?: SortOption;
   limit?: number;
+}
+
+export interface HomepageContent {
+  heroHeading: string;
+  heroHeadingAccent: string;
+  heroTagline: string;
+  heroDescription: string;
+  heroImageUrl: string;
+  heroNote: string;
+  popularSearches: string[];
+}
+
+export interface AboutContent {
+  heading: string;
+  content: string;
+  imageUrl: string;
+}
+
+export interface FooterContent {
+  description: string;
+  copyright: string;
+  socialLinks: Array<{ label: string; url: string }>;
 }
