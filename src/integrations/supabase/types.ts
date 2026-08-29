@@ -14,16 +14,241 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      anime: {
+        Row: {
+          aliases: string[]
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          aliases?: string[]
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          aliases?: string[]
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      clips: {
+        Row: {
+          anime_aliases: string[]
+          anime_id: string | null
+          category_id: string | null
+          character: string | null
+          character_aliases: string[]
+          created_at: string
+          description: string
+          download_url: string
+          duration: number
+          format: string
+          id: string
+          published: boolean
+          resolution: string
+          screenshot_urls: string[]
+          search_doc: string
+          search_vector: unknown
+          slug: string
+          tags: string[]
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          anime_aliases?: string[]
+          anime_id?: string | null
+          category_id?: string | null
+          character?: string | null
+          character_aliases?: string[]
+          created_at?: string
+          description?: string
+          download_url?: string
+          duration?: number
+          format?: string
+          id?: string
+          published?: boolean
+          resolution?: string
+          screenshot_urls?: string[]
+          search_doc?: string
+          search_vector?: unknown
+          slug: string
+          tags?: string[]
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          anime_aliases?: string[]
+          anime_id?: string | null
+          category_id?: string | null
+          character?: string | null
+          character_aliases?: string[]
+          created_at?: string
+          description?: string
+          download_url?: string
+          duration?: number
+          format?: string
+          id?: string
+          published?: boolean
+          resolution?: string
+          screenshot_urls?: string[]
+          search_doc?: string
+          search_vector?: unknown
+          slug?: string
+          tags?: string[]
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clips_anime_id_fkey"
+            columns: ["anime_id"]
+            isOneToOne: false
+            referencedRelation: "anime"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clips_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_content: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_exists: { Args: never; Returns: boolean }
+      claim_admin: { Args: never; Returns: boolean }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      search_clips: {
+        Args: { q: string }
+        Returns: {
+          anime_aliases: string[]
+          anime_id: string | null
+          category_id: string | null
+          character: string | null
+          character_aliases: string[]
+          created_at: string
+          description: string
+          download_url: string
+          duration: number
+          format: string
+          id: string
+          published: boolean
+          resolution: string
+          screenshot_urls: string[]
+          search_doc: string
+          search_vector: unknown
+          slug: string
+          tags: string[]
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "clips"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +375,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin"],
+    },
   },
 } as const
