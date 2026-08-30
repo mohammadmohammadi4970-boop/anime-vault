@@ -123,7 +123,9 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const { footer } = Route.useLoaderData();
+  const footer = Route.useLoaderData({ structuralSharing: false } as never) as
+    | { footer: import("../data/types").FooterContent }
+    | undefined;
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -133,7 +135,7 @@ function RootComponent() {
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
         </div>
-        <Footer content={footer} />
+        <Footer content={footer?.footer} />
       </div>
     </QueryClientProvider>
   );
