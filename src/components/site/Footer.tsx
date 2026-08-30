@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 
 import type { FooterContent } from "@/data/types";
 
-export function Footer({ content }: { content?: FooterContent }) {
+export function Footer({ content }: { content?: FooterContent | undefined }) {
   return (
     <footer className="border-t border-border bg-surface/40">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4 lg:px-8">
