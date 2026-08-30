@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { LegalPage } from "@/components/site/Section";
+import { aboutContent } from "@/data/repository";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -15,18 +16,28 @@ export const Route = createFileRoute("/about")({
       { property: "og:description", content: "A curated anime clip library for creators." },
     ],
   }),
-  component: () => (
-    <LegalPage title="About Kuragawa Clips">
-      <p>
-        Kuragawa Clips is a curated anime clip library built for editors, creators and fans. The
-        standard is simple: clean sources, accurate metadata and no clutter.
-      </p>
-      <p>
-        Every clip in the library is a data record — title, anime, character, aliases, tags,
-        category, screenshots and an external download link — so the catalogue can grow to hundreds
-        of clips without a single new page being written by hand.
-      </p>
-      <p className="text-xs">Placeholder copy — replace with your own wording.</p>
-    </LegalPage>
-  ),
+  loader: async () => ({ content: await aboutContent() }),
+  component: AboutPage,
 });
+
+function AboutPage() {
+  const { content } = Route.useLoaderData();
+  return (
+    <LegalPage title={content.heading}>
+      {content.imageUrl ? (
+        <img
+          src={content.imageUrl}
+          alt={content.heading}
+          loading="lazy"
+          className="mb-6 w-full rounded-2xl border border-border object-cover"
+        />
+      ) : null}
+      {content.content
+        .split(/\n{2,}/)
+        .filter(Boolean)
+        .map((para, i) => (
+          <p key={i}>{para}</p>
+        ))}
+    </LegalPage>
+  );
+}
