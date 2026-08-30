@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 
-export function Footer() {
+import type { FooterContent } from "@/data/types";
+
+export function Footer({ content }: { content?: FooterContent }) {
   return (
     <footer className="border-t border-border bg-surface/40">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4 lg:px-8">
@@ -12,7 +14,8 @@ export function Footer() {
             <span className="font-display text-base font-semibold">Kuragawa Clips</span>
           </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            High-quality anime clips for editors, creators and fans. Anime clips. Higher standards.
+            {content?.description ??
+              "High-quality anime clips for editors, creators and fans. Anime clips. Higher standards."}
           </p>
         </div>
 
@@ -39,7 +42,10 @@ export function Footer() {
 
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <p>© {new Date().getFullYear()} Kuragawa Clips. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()}{" "}
+            {content?.copyright ?? "Kuragawa Clips. All rights reserved."}
+          </p>
           <p>Made for anime editors.</p>
         </div>
       </div>
