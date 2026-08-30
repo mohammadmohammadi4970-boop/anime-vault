@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { Footer } from "../components/site/Footer";
 import { Header } from "../components/site/Header";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { footerContent } from "../data/repository";
 
 function NotFoundComponent() {
   return (
@@ -99,6 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
+  loader: async () => ({ footer: await footerContent() }),
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -121,6 +123,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { footer } = Route.useLoaderData();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -130,7 +133,7 @@ function RootComponent() {
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
         </div>
-        <Footer />
+        <Footer content={footer} />
       </div>
     </QueryClientProvider>
   );
