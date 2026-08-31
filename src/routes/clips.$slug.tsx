@@ -102,6 +102,8 @@ function ClipPage() {
         <Meta label="Anime" value={animeName} />
         <Meta label="Character" value={clip.character ?? "—"} />
         <Meta label="Category" value={categoryName} />
+        {clip.season !== null && <Meta label="Season" value={String(clip.season)} />}
+        {clip.episode !== null && <Meta label="Episode" value={String(clip.episode)} />}
         <Meta label="Duration" value={formatDuration(clip.duration)} />
         <Meta label="Quality" value={clip.resolution} />
         <Meta label="Format" value={clip.format} />

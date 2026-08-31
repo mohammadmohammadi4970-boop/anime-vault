@@ -25,6 +25,8 @@ type ClipRow = {
   character: string | null;
   character_aliases: string[];
   anime_aliases: string[];
+  season: number | null;
+  episode: number | null;
   tags: string[];
   description: string;
   thumbnail_url: string | null;
@@ -86,6 +88,8 @@ function toClip(
     aliases: [...(row.character_aliases ?? []), ...(row.anime_aliases ?? [])],
     tags: row.tags ?? [],
     categorySlug: category?.slug ?? "",
+    season: row.season ?? null,
+    episode: row.episode ?? null,
     description: row.description ?? "",
     thumbnail: row.thumbnail_url || FALLBACK_IMAGE,
     screenshots:
@@ -225,6 +229,35 @@ export async function relatedClips(clip: Clip, limit = 4): Promise<Clip[]> {
     }))
     .sort((a, b) => b.score - a.score);
   return scored.slice(0, limit).map((s) => s.clip);
+}
+
+/** Groups a list of clips by season/episode for the anime page. Clips with no
+ * episode set are grouped last, under "Unsorted". */
+export function groupByEpisode(
+  clips: Clip[],
+): Array<{ season: number | null; episode: number | null; label: string; clips: Clip[] }> {
+  const groups = new Map<string, { season: number | null; episode: number | null; clips: Clip[] }>();
+  for (const clip of clips) {
+    const key = `${clip.season ?? "x"}-${clip.episode ?? "x"}`;
+    if (!groups.has(key)) groups.set(key, { season: clip.season, episode: clip.episode, clips: [] });
+    groups.get(key)!.clips.push(clip);
+  }
+  return Array.from(groups.values())
+    .sort((a, b) => {
+      if (a.episode === null) return 1;
+      if (b.episode === null) return -1;
+      if (a.season !== b.season) return (a.season ?? 0) - (b.season ?? 0);
+      return (a.episode ?? 0) - (b.episode ?? 0);
+    })
+    .map((g) => ({
+      ...g,
+      label:
+        g.episode === null
+          ? "Unsorted"
+          : g.season !== null
+            ? `Season ${g.season} · Episode ${g.episode}`
+            : `Episode ${g.episode}`,
+    }));
 }
 
 export async function animeWithCounts(): Promise<Array<Anime & { clipCount: number }>> {

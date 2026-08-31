@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Btn, Field, ImageField, TextArea, TextInput, csv, parseCsv } from "./shared";
 import { supabase } from "@/integrations/supabase/client";
 import type { AboutContent, FooterContent, HomepageContent } from "@/data/types";
+import type { Json } from "@/integrations/supabase/types";
 
 type Blocks = {
   homepage: HomepageContent;
@@ -54,9 +55,9 @@ export function ContentTab({ notify }: { notify: (msg: string, kind?: "ok" | "er
     mutationFn: async (next: Blocks) => {
       const { error } = await supabase.from("site_content").upsert(
         [
-          { key: "homepage", value: next.homepage },
-          { key: "about", value: next.about },
-          { key: "footer", value: next.footer },
+          { key: "homepage", value: next.homepage as unknown as Json },
+          { key: "about", value: next.about as unknown as Json },
+          { key: "footer", value: next.footer as unknown as Json },
         ],
         { onConflict: "key" },
       );

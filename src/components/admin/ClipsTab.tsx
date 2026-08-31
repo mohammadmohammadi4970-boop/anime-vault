@@ -13,6 +13,8 @@ type ClipRow = {
   character: string | null;
   character_aliases: string[];
   anime_aliases: string[];
+  season: number | null;
+  episode: number | null;
   tags: string[];
   description: string;
   thumbnail_url: string | null;
@@ -33,6 +35,8 @@ const empty = (): ClipRow => ({
   character: "",
   character_aliases: [],
   anime_aliases: [],
+  season: null,
+  episode: null,
   tags: [],
   description: "",
   thumbnail_url: "",
@@ -48,6 +52,7 @@ export function ClipsTab() {
   const qc = useQueryClient();
   const [draft, setDraft] = useState<ClipRow | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
 
   const clips = useQuery({
     queryKey: ["admin", "clips"],
@@ -136,9 +141,17 @@ export function ClipsTab() {
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">{clips.data?.length ?? 0} clips</p>
         <Btn onClick={() => setDraft(empty())}>Add clip</Btn>
+      </div>
+
+      <div className="mt-3">
+        <TextInput
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search clips by title, character, or slug…"
+        />
       </div>
 
       {error ? <p className="mt-3 text-xs text-destructive">{error}</p> : null}
@@ -213,6 +226,26 @@ export function ClipsTab() {
               <TextInput
                 value={csv(draft.tags)}
                 onChange={(e) => setDraft({ ...draft, tags: parseCsv(e.target.value) })}
+              />
+            </Field>
+            <Field label="Season (optional)">
+              <TextInput
+                type="number"
+                min={0}
+                value={draft.season === null ? "" : String(draft.season)}
+                onChange={(e) =>
+                  setDraft({ ...draft, season: e.target.value === "" ? null : Number(e.target.value) })
+                }
+              />
+            </Field>
+            <Field label="Episode (optional)">
+              <TextInput
+                type="number"
+                min={0}
+                value={draft.episode === null ? "" : String(draft.episode)}
+                onChange={(e) =>
+                  setDraft({ ...draft, episode: e.target.value === "" ? null : Number(e.target.value) })
+                }
               />
             </Field>
             <Field label="Duration (seconds)">
@@ -290,7 +323,17 @@ export function ClipsTab() {
       ) : null}
 
       <div className="mt-6 space-y-2">
-        {(clips.data ?? []).map((c) => (
+        {(clips.data ?? [])
+          .filter((c) => {
+            const q = query.trim().toLowerCase();
+            if (!q) return true;
+            return (
+              c.title.toLowerCase().includes(q) ||
+              c.slug.toLowerCase().includes(q) ||
+              (c.character ?? "").toLowerCase().includes(q)
+            );
+          })
+          .map((c) => (
           <div
             key={c.id}
             className="flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface/50 p-3"

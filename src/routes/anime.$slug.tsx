@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 
 import { ClipGrid } from "@/components/site/ClipCard";
 import { PageShell } from "@/components/site/Section";
-import { getAnime, listClips } from "@/data/repository";
+import { getAnime, groupByEpisode, listClips } from "@/data/repository";
 
 export const Route = createFileRoute("/anime/$slug")({
   loader: async ({ params }) => {
@@ -37,6 +37,8 @@ function AnimePage() {
     [clips],
   );
   const visible = character ? clips.filter((c) => c.character === character) : clips;
+  const episodeGroups = useMemo(() => groupByEpisode(visible), [visible]);
+  const hasEpisodeData = episodeGroups.some((g) => g.episode !== null);
 
   return (
     <PageShell
@@ -77,8 +79,21 @@ function AnimePage() {
         ))}
       </div>
 
-      <div className="mt-8">
-        <ClipGrid clips={visible} animeNames={{ [anime.slug]: anime.name }} />
+      <div className="mt-8 space-y-10">
+        {hasEpisodeData ? (
+          episodeGroups.map((group) => (
+            <section key={group.label} aria-label={group.label}>
+              <h2 className="font-display text-sm font-semibold text-muted-foreground">
+                {group.label}
+              </h2>
+              <div className="mt-3">
+                <ClipGrid clips={group.clips} animeNames={{ [anime.slug]: anime.name }} />
+              </div>
+            </section>
+          ))
+        ) : (
+          <ClipGrid clips={visible} animeNames={{ [anime.slug]: anime.name }} />
+        )}
       </div>
     </PageShell>
   );

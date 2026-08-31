@@ -16,6 +16,8 @@ export interface Clip {
   aliases: string[];
   tags: string[];
   categorySlug: string;
+  season: number | null;
+  episode: number | null;
   description: string;
   thumbnail: string;
   screenshots: string[];
