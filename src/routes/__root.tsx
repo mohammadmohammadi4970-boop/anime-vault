@@ -13,7 +13,7 @@ import appCss from "../styles.css?url";
 import { Footer } from "../components/site/Footer";
 import { Header } from "../components/site/Header";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { footerContent } from "../data/repository";
+import { footerContent, homepageContent } from "../data/repository";
 
 function NotFoundComponent() {
   return (
@@ -100,7 +100,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
-  loader: async () => ({ footer: await footerContent() }),
+  loader: async () => {
+    const [footer, homepage] = await Promise.all([footerContent(), homepageContent()]);
+    return { footer, logoUrl: homepage.logoUrl };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -123,19 +126,19 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const footer = Route.useLoaderData({ structuralSharing: false } as never) as
-    | { footer: import("../data/types").FooterContent }
+  const data = Route.useLoaderData({ structuralSharing: false } as never) as
+    | { footer: import("../data/types").FooterContent; logoUrl: string }
     | undefined;
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
-        <Header />
+        <Header logoUrl={data?.logoUrl} />
         <div className="flex-1">
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
         </div>
-        <Footer content={footer?.footer} />
+        <Footer content={data?.footer} logoUrl={data?.logoUrl} />
       </div>
     </QueryClientProvider>
   );

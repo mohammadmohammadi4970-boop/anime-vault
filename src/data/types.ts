@@ -68,6 +68,7 @@ export interface HomepageContent {
   heroImageUrl: string;
   heroNote: string;
   popularSearches: string[];
+  logoUrl: string;
 }
 
 export interface AboutContent {

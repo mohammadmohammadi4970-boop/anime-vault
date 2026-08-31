@@ -293,6 +293,7 @@ export async function homepageContent(): Promise<HomepageContent> {
     heroImageUrl: "",
     heroNote: "New anime clips, updated as new episodes drop.",
     popularSearches: [],
+    logoUrl: "",
   });
 }
 

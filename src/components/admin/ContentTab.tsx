@@ -21,6 +21,7 @@ const defaults: Blocks = {
     heroImageUrl: "",
     heroNote: "New anime clips, updated as new episodes drop.",
     popularSearches: [],
+    logoUrl: "",
   },
   about: { heading: "", content: "", imageUrl: "" },
   footer: { description: "", copyright: "", socialLinks: [] },
@@ -87,6 +88,12 @@ export function ContentTab({ notify }: { notify: (msg: string, kind?: "ok" | "er
       <section className="surface-panel rounded-2xl p-5">
         <h3 className="font-display text-sm font-semibold">Homepage</h3>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <ImageField
+            label="Logo (shown in the header and footer)"
+            folder="site"
+            value={home.logoUrl}
+            onChange={(url) => setHome({ logoUrl: url })}
+          />
           <Field label="Hero heading">
             <TextInput
               value={home.heroHeading}

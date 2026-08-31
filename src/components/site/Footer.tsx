@@ -2,15 +2,25 @@ import { Link } from "@tanstack/react-router";
 
 import type { FooterContent } from "@/data/types";
 
-export function Footer({ content }: { content?: FooterContent | undefined }) {
+export function Footer({
+  content,
+  logoUrl,
+}: {
+  content?: FooterContent | undefined;
+  logoUrl?: string | undefined;
+}) {
   return (
     <footer className="border-t border-border bg-surface/40">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4 lg:px-8">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2.5">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary/15 font-display text-lg font-bold text-primary-soft">
-              K
-            </span>
+            {logoUrl ? (
+              <img src={logoUrl} alt="Kuragawa Clips" className="h-9 w-9 rounded-xl object-cover" />
+            ) : (
+              <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary/15 font-display text-lg font-bold text-primary-soft">
+                K
+              </span>
+            )}
             <span className="font-display text-base font-semibold">Kuragawa Clips</span>
           </div>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">

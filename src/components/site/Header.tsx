@@ -10,7 +10,7 @@ const NAV = [
   { to: "/about", label: "About" },
 ] as const;
 
-export function Header() {
+export function Header({ logoUrl }: { logoUrl?: string | undefined }) {
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [term, setTerm] = useState("");
@@ -28,9 +28,17 @@ export function Header() {
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-8">
           <Link to="/" className="flex min-w-0 items-center gap-2.5" aria-label="Kuragawa Clips home">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/15 font-display text-lg font-bold text-primary-soft">
-              K
-            </span>
+            {logoUrl ? (
+              <img
+                src={logoUrl}
+                alt="Kuragawa Clips"
+                className="h-9 w-9 shrink-0 rounded-xl object-cover"
+              />
+            ) : (
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/15 font-display text-lg font-bold text-primary-soft">
+                K
+              </span>
+            )}
             <span className="truncate font-display text-base font-semibold tracking-tight">
               Kuragawa Clips
             </span>
