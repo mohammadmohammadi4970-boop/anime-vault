@@ -85,6 +85,7 @@ export type Database = {
           description: string
           download_url: string
           duration: number
+          episode: number | null
           format: string
           id: string
           published: boolean
@@ -92,6 +93,7 @@ export type Database = {
           screenshot_urls: string[]
           search_doc: string
           search_vector: unknown
+          season: number | null
           slug: string
           tags: string[]
           thumbnail_url: string | null
@@ -108,6 +110,7 @@ export type Database = {
           description?: string
           download_url?: string
           duration?: number
+          episode?: number | null
           format?: string
           id?: string
           published?: boolean
@@ -115,6 +118,7 @@ export type Database = {
           screenshot_urls?: string[]
           search_doc?: string
           search_vector?: unknown
+          season?: number | null
           slug: string
           tags?: string[]
           thumbnail_url?: string | null
@@ -131,6 +135,7 @@ export type Database = {
           description?: string
           download_url?: string
           duration?: number
+          episode?: number | null
           format?: string
           id?: string
           published?: boolean
@@ -138,6 +143,7 @@ export type Database = {
           screenshot_urls?: string[]
           search_doc?: string
           search_vector?: unknown
+          season?: number | null
           slug?: string
           tags?: string[]
           thumbnail_url?: string | null
@@ -179,6 +185,30 @@ export type Database = {
         }
         Relationships: []
       }
+      tags: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -214,6 +244,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      rename_tag: { Args: { _new: string; _old: string }; Returns: undefined }
       search_clips: {
         Args: { q: string }
         Returns: {
@@ -226,6 +257,7 @@ export type Database = {
           description: string
           download_url: string
           duration: number
+          episode: number | null
           format: string
           id: string
           published: boolean
@@ -233,6 +265,7 @@ export type Database = {
           screenshot_urls: string[]
           search_doc: string
           search_vector: unknown
+          season: number | null
           slug: string
           tags: string[]
           thumbnail_url: string | null
