@@ -48,7 +48,19 @@ function AdminPage() {
       .eq("user_id", uid)
       .eq("role", "admin")
       .maybeSingle();
-    setIsAdmin(!!data);
+    if (data) {
+      setIsAdmin(true);
+      return;
+    }
+    // Not an admin yet — if nobody has claimed admin at all, this signed-in
+    // account (e.g. one that just confirmed its email) should claim it now.
+    const { data: exists } = await supabase.rpc("admin_exists");
+    if (!exists) {
+      const { data: claimed } = await supabase.rpc("claim_admin");
+      setIsAdmin(!!claimed);
+      return;
+    }
+    setIsAdmin(false);
   };
 
   useEffect(() => {
@@ -91,9 +103,11 @@ function AdminPage() {
 }
 
 /** Signed out: sign in, or — only while no admin account exists yet —
- * create the very first admin account. */
+ * create the very first admin account. Either mode is available at any time,
+ * since an account may already exist (e.g. created but awaiting email
+ * confirmation) and just needs a normal sign-in once confirmed. */
 function SignInScreen({ adminExists }: { adminExists: boolean | null }) {
-  const firstRun = adminExists === false;
+  const [mode, setMode] = useState<"signin" | "signup">(adminExists === false ? "signup" : "signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -139,10 +153,10 @@ function SignInScreen({ adminExists }: { adminExists: boolean | null }) {
     <main className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-16">
       <p className="eyebrow">Private</p>
       <h1 className="mt-2 font-display text-2xl font-bold">
-        {firstRun ? "Create the admin account" : "Admin sign in"}
+        {mode === "signup" ? "Create the admin account" : "Admin sign in"}
       </h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        {firstRun
+        {mode === "signup"
           ? "No admin account exists yet — the first account you create here becomes the permanent admin."
           : "Sign in with your admin email and password."}
       </p>
@@ -151,7 +165,7 @@ function SignInScreen({ adminExists }: { adminExists: boolean | null }) {
         className="mt-6 space-y-4"
         onSubmit={(e) => {
           e.preventDefault();
-          void (firstRun ? createAdmin() : signIn());
+          void (mode === "signup" ? createAdmin() : signIn());
         }}
       >
         <Field label="Email">
@@ -166,7 +180,7 @@ function SignInScreen({ adminExists }: { adminExists: boolean | null }) {
         <Field label="Password">
           <TextInput
             type="password"
-            autoComplete={firstRun ? "new-password" : "current-password"}
+            autoComplete={mode === "signup" ? "new-password" : "current-password"}
             required
             minLength={6}
             value={password}
@@ -177,10 +191,24 @@ function SignInScreen({ adminExists }: { adminExists: boolean | null }) {
         {error ? <p className="text-xs text-destructive">{error}</p> : null}
         {info ? <p className="text-xs text-primary-soft">{info}</p> : null}
 
-        <Btn disabled={busy} onClick={() => void (firstRun ? createAdmin() : signIn())}>
-          {busy ? "Please wait…" : firstRun ? "Create admin account" : "Sign in"}
+        <Btn disabled={busy} onClick={() => void (mode === "signup" ? createAdmin() : signIn())}>
+          {busy ? "Please wait…" : mode === "signup" ? "Create admin account" : "Sign in"}
         </Btn>
       </form>
+
+      <button
+        type="button"
+        onClick={() => {
+          setMode(mode === "signup" ? "signin" : "signup");
+          setError(null);
+          setInfo(null);
+        }}
+        className="mt-4 text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+      >
+        {mode === "signup"
+          ? "Already created an account? Sign in instead"
+          : "Setting this up for the first time? Create the admin account"}
+      </button>
     </main>
   );
 }
