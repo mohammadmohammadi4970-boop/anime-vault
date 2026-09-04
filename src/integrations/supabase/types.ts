@@ -99,6 +99,7 @@ export type Database = {
           thumbnail_url: string | null
           title: string
           updated_at: string
+          youtube_url: string | null
         }
         Insert: {
           anime_aliases?: string[]
@@ -124,6 +125,7 @@ export type Database = {
           thumbnail_url?: string | null
           title: string
           updated_at?: string
+          youtube_url?: string | null
         }
         Update: {
           anime_aliases?: string[]
@@ -149,6 +151,7 @@ export type Database = {
           thumbnail_url?: string | null
           title?: string
           updated_at?: string
+          youtube_url?: string | null
         }
         Relationships: [
           {
@@ -271,6 +274,7 @@ export type Database = {
           thumbnail_url: string | null
           title: string
           updated_at: string
+          youtube_url: string | null
         }[]
         SetofOptions: {
           from: "*"
