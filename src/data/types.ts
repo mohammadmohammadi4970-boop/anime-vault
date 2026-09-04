@@ -27,6 +27,8 @@ export interface Clip {
   format: string;
   /** External (e.g. Google Drive) URL. Never hardcoded in the UI. */
   downloadUrl: string;
+  /** Optional YouTube link shown as an inline preview before download. */
+  youtubeUrl: string | null;
   published: boolean;
   createdAt: string;
   updatedAt: string;

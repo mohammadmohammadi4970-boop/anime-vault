@@ -13,24 +13,32 @@ export const Route = createFileRoute("/clips/$slug")({
     return {
       clip,
       animeName: anime?.name ?? clip.animeSlug,
-      categoryName:
-        categories.find((c) => c.slug === clip.categorySlug)?.name ?? clip.categorySlug,
+      categoryName: categories.find((c) => c.slug === clip.categorySlug)?.name ?? clip.categorySlug,
       related: await relatedClips(clip),
     };
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [{ title: "Clip not found — Kuragawa Clips" }, { name: "robots", content: "noindex" }],
+        meta: [
+          { title: "Clip not found — Kuragawa Clips" },
+          { name: "robots", content: "noindex" },
+        ],
       };
     }
     const { clip, animeName } = loaderData;
     return {
       meta: [
         { title: `${clip.title} — Kuragawa Clips` },
-        { name: "description", content: `${animeName}${clip.character ? ` • ${clip.character}` : ""} — ${clip.description}` },
+        {
+          name: "description",
+          content: `${animeName}${clip.character ? ` • ${clip.character}` : ""} — ${clip.description}`,
+        },
         { property: "og:title", content: `${clip.title} — Kuragawa Clips` },
-        { property: "og:description", content: `${animeName} clip in ${clip.resolution} ${clip.format}.` },
+        {
+          property: "og:description",
+          content: `${animeName} clip in ${clip.resolution} ${clip.format}.`,
+        },
       ],
     };
   },
@@ -46,8 +54,26 @@ function Meta({ label, value }: { label: string; value: string }) {
   );
 }
 
+function youtubeEmbedUrl(url: string): string | null {
+  try {
+    const u = new URL(url);
+    let id: string | null = null;
+    if (u.hostname.includes("youtu.be")) {
+      id = u.pathname.slice(1);
+    } else if (u.hostname.includes("youtube.com")) {
+      if (u.pathname === "/watch") id = u.searchParams.get("v");
+      else if (u.pathname.startsWith("/embed/")) id = u.pathname.split("/")[2] ?? null;
+      else if (u.pathname.startsWith("/shorts/")) id = u.pathname.split("/")[2] ?? null;
+    }
+    return id ? `https://www.youtube.com/embed/${id}` : null;
+  } catch {
+    return null;
+  }
+}
+
 function ClipPage() {
   const { clip, animeName, categoryName, related } = Route.useLoaderData();
+  const embedUrl = clip.youtubeUrl ? youtubeEmbedUrl(clip.youtubeUrl) : null;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
@@ -66,7 +92,25 @@ function ClipPage() {
         </p>
       </header>
 
-      <section aria-label="Screenshots" className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+      {embedUrl ? (
+        <section aria-label="Preview" className="mt-8">
+          <div className="overflow-hidden rounded-2xl border border-border bg-black">
+            <iframe
+              src={embedUrl}
+              title={`${clip.title} preview`}
+              className="aspect-video w-full"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </section>
+      ) : null}
+
+      <section
+        aria-label="Screenshots"
+        className={`grid grid-cols-1 gap-3 sm:grid-cols-3 ${embedUrl ? "mt-4" : "mt-8"}`}
+      >
         {clip.screenshots.map((shot, i) => (
           <img
             key={shot + i}

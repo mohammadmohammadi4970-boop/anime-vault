@@ -35,6 +35,7 @@ type ClipRow = {
   resolution: string;
   format: string;
   download_url: string;
+  youtube_url: string | null;
   published: boolean;
   created_at: string;
   updated_at: string;
@@ -100,6 +101,7 @@ function toClip(
     resolution: row.resolution,
     format: row.format,
     downloadUrl: row.download_url ?? "",
+    youtubeUrl: row.youtube_url ?? null,
     published: row.published,
     createdAt: row.created_at,
     updatedAt: row.updated_at,

@@ -23,6 +23,7 @@ type ClipRow = {
   resolution: string;
   format: string;
   download_url: string;
+  youtube_url: string | null;
   published: boolean;
 };
 
@@ -45,6 +46,7 @@ const empty = (): ClipRow => ({
   resolution: "1080p",
   format: "MP4",
   download_url: "",
+  youtube_url: "",
   published: false,
 });
 
@@ -96,6 +98,7 @@ export function ClipsTab() {
         slug: rest.slug || slugify(rest.title),
         character: rest.character || null,
         thumbnail_url: rest.thumbnail_url || null,
+        youtube_url: rest.youtube_url || null,
       };
       const res = id
         ? await supabase.from("clips").update(payload).eq("id", id)
@@ -234,7 +237,10 @@ export function ClipsTab() {
                 min={0}
                 value={draft.season === null ? "" : String(draft.season)}
                 onChange={(e) =>
-                  setDraft({ ...draft, season: e.target.value === "" ? null : Number(e.target.value) })
+                  setDraft({
+                    ...draft,
+                    season: e.target.value === "" ? null : Number(e.target.value),
+                  })
                 }
               />
             </Field>
@@ -244,7 +250,10 @@ export function ClipsTab() {
                 min={0}
                 value={draft.episode === null ? "" : String(draft.episode)}
                 onChange={(e) =>
-                  setDraft({ ...draft, episode: e.target.value === "" ? null : Number(e.target.value) })
+                  setDraft({
+                    ...draft,
+                    episode: e.target.value === "" ? null : Number(e.target.value),
+                  })
                 }
               />
             </Field>
@@ -271,6 +280,13 @@ export function ClipsTab() {
               <TextInput
                 value={draft.download_url}
                 onChange={(e) => setDraft({ ...draft, download_url: e.target.value })}
+              />
+            </Field>
+            <Field label="YouTube preview link (optional)">
+              <TextInput
+                value={draft.youtube_url ?? ""}
+                onChange={(e) => setDraft({ ...draft, youtube_url: e.target.value })}
+                placeholder="https://youtube.com/watch?v=…"
               />
             </Field>
           </div>
@@ -334,42 +350,44 @@ export function ClipsTab() {
             );
           })
           .map((c) => (
-          <div
-            key={c.id}
-            className="flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface/50 p-3"
-          >
-            <img
-              src={c.thumbnail_url || "/seed/clip-1.jpg"}
-              alt=""
-              className="h-12 w-20 rounded-lg object-cover"
-            />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">{c.title}</p>
-              <p className="truncate text-xs text-muted-foreground">/{c.slug}</p>
+            <div
+              key={c.id}
+              className="flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface/50 p-3"
+            >
+              <img
+                src={c.thumbnail_url || "/seed/clip-1.jpg"}
+                alt=""
+                className="h-12 w-20 rounded-lg object-cover"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">{c.title}</p>
+                <p className="truncate text-xs text-muted-foreground">/{c.slug}</p>
+              </div>
+              <span
+                className={`rounded-full px-2.5 py-1 text-[11px] ${
+                  c.published
+                    ? "bg-primary/15 text-primary-soft"
+                    : "bg-surface-2 text-muted-foreground"
+                }`}
+              >
+                {c.published ? "Published" : "Draft"}
+              </span>
+              <Btn variant="ghost" onClick={() => togglePublish.mutate(c)}>
+                {c.published ? "Unpublish" : "Publish"}
+              </Btn>
+              <Btn variant="ghost" onClick={() => setDraft({ ...c, character: c.character ?? "" })}>
+                Edit
+              </Btn>
+              <Btn
+                variant="danger"
+                onClick={() => {
+                  if (confirm(`Delete “${c.title}”?`)) remove.mutate(c.id);
+                }}
+              >
+                Delete
+              </Btn>
             </div>
-            <span
-              className={`rounded-full px-2.5 py-1 text-[11px] ${
-                c.published ? "bg-primary/15 text-primary-soft" : "bg-surface-2 text-muted-foreground"
-              }`}
-            >
-              {c.published ? "Published" : "Draft"}
-            </span>
-            <Btn variant="ghost" onClick={() => togglePublish.mutate(c)}>
-              {c.published ? "Unpublish" : "Publish"}
-            </Btn>
-            <Btn variant="ghost" onClick={() => setDraft({ ...c, character: c.character ?? "" })}>
-              Edit
-            </Btn>
-            <Btn
-              variant="danger"
-              onClick={() => {
-                if (confirm(`Delete “${c.title}”?`)) remove.mutate(c.id);
-              }}
-            >
-              Delete
-            </Btn>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );
