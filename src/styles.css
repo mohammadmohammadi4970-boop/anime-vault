@@ -139,7 +139,7 @@
   background: conic-gradient(
     from 0deg at 70% 30%,
     transparent 0deg,
-    color-mix(in oklab, var(--primary) 55%, transparent) 40deg,
+    color-mix(in oklab, var(--primary) 70%, transparent) 40deg,
     transparent 90deg,
     transparent 360deg
   );

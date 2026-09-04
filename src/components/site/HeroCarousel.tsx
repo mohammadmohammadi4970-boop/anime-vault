@@ -54,29 +54,48 @@ export function HeroCarousel({ anime }: { anime: FeaturedAnime[] }) {
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      className="relative isolate overflow-hidden"
+      className="relative isolate overflow-hidden border-b border-border bg-background"
     >
-      {/* Ambient background: soft light rays + drifting particles. Purely
-          decorative, so hidden from assistive tech, and skipped entirely
-          when the visitor prefers reduced motion. */}
+      {/* Atmospheric backdrop: the current slide's own artwork, blown up,
+          blurred and darkened — gives each anime its own ambient mood
+          without needing a separate uploaded background image. Crossfades
+          between slides. */}
+      <div aria-hidden className="absolute inset-0 -z-20 overflow-hidden">
+        {anime.map((a, i) => (
+          <img
+            key={a.id}
+            src={a.artwork}
+            alt=""
+            className={`absolute inset-0 h-full w-full scale-125 object-cover blur-3xl transition-opacity duration-1000 ${
+              i === active ? "opacity-45" : "opacity-0"
+            }`}
+          />
+        ))}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/70" />
+      </div>
+
+      {/* Ambient motion: soft rotating light rays + drifting particles.
+          Purely decorative, so hidden from assistive tech, and skipped
+          entirely when the visitor prefers reduced motion. */}
       {!reduceMotion && (
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div className="hero-rays absolute inset-0 opacity-[0.15]" />
-          {[...Array(5)].map((_, i) => (
+          <div className="hero-rays absolute inset-0 opacity-30" />
+          {[...Array(8)].map((_, i) => (
             <span
               key={i}
-              className="hero-particle absolute block h-1 w-1 rounded-full bg-primary/70"
+              className="hero-particle absolute block h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_2px_var(--primary)]"
               style={{
-                left: `${12 + i * 18}%`,
-                animationDelay: `${i * 1.6}s`,
-                animationDuration: `${9 + i * 2}s`,
+                left: `${8 + i * 12}%`,
+                animationDelay: `${i * 1.1}s`,
+                animationDuration: `${8 + (i % 3) * 2}s`,
               }}
             />
           ))}
         </div>
       )}
 
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:gap-6 lg:py-20 lg:px-8">
+      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:gap-6 lg:py-20 lg:px-8">
         {/* Text side */}
         <div key={slide.id} className="hero-fade-in">
           <p className="eyebrow">Anime clips. Higher standards.</p>
@@ -107,19 +126,19 @@ export function HeroCarousel({ anime }: { anime: FeaturedAnime[] }) {
         <div className="relative flex justify-center lg:justify-end">
           <div
             aria-hidden
-            className="absolute inset-0 -z-10 rounded-full bg-primary/25 blur-[80px]"
+            className="absolute inset-0 -z-10 rounded-full bg-primary/30 blur-[90px]"
           />
           <img
             key={slide.id}
             src={slide.artwork}
             alt={slide.name}
-            className="hero-fade-in max-h-[420px] w-auto rounded-3xl object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)] sm:max-h-[480px]"
+            className="hero-fade-in max-h-[420px] w-auto rounded-3xl object-contain drop-shadow-[0_30px_60px_rgba(0,0,0,0.55)] sm:max-h-[480px]"
           />
         </div>
       </div>
 
       {anime.length > 1 && (
-        <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 pb-8 sm:px-6 lg:px-8">
+        <div className="relative mx-auto flex max-w-7xl items-center gap-2 px-4 pb-8 sm:px-6 lg:px-8">
           {anime.map((a, i) => (
             <button
               key={a.id}
