@@ -2,7 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { ClipGrid } from "@/components/site/ClipCard";
 import { HeroCarousel, pickFeatured } from "@/components/site/HeroCarousel";
-import { PrimaryHero } from "@/components/site/PrimaryHero";
+import { PromoBanner } from "@/components/site/PromoBanner";
 import { Reveal } from "@/components/site/Reveal";
 import { SearchBar } from "@/components/site/SearchBar";
 import {
@@ -46,8 +46,7 @@ function Home() {
 
   return (
     <main>
-      <PrimaryHero stats={stats} />
-      {featured.length > 0 ? <HeroCarousel anime={featured} /> : null}
+      <HeroCarousel anime={featured} stats={stats} />
 
       <section className="border-b border-border bg-surface/30" aria-label="Search clips">
         <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
@@ -90,6 +89,8 @@ function Home() {
           </div>
         </section>
       </Reveal>
+
+      <PromoBanner />
     </main>
   );
 }
