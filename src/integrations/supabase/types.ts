@@ -83,6 +83,7 @@ export type Database = {
           character_aliases: string[]
           created_at: string
           description: string
+          download_count: number
           download_url: string
           duration: number
           episode: number | null
@@ -109,6 +110,7 @@ export type Database = {
           character_aliases?: string[]
           created_at?: string
           description?: string
+          download_count?: number
           download_url?: string
           duration?: number
           episode?: number | null
@@ -135,6 +137,7 @@ export type Database = {
           character_aliases?: string[]
           created_at?: string
           description?: string
+          download_count?: number
           download_url?: string
           duration?: number
           episode?: number | null
@@ -169,6 +172,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      requests: {
+        Row: {
+          anime_name: string
+          created_at: string
+          details: string
+          id: string
+          status: string
+        }
+        Insert: {
+          anime_name: string
+          created_at?: string
+          details?: string
+          id?: string
+          status?: string
+        }
+        Update: {
+          anime_name?: string
+          created_at?: string
+          details?: string
+          id?: string
+          status?: string
+        }
+        Relationships: []
       }
       site_content: {
         Row: {
@@ -247,6 +274,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_download_count: {
+        Args: { clip_id: string }
+        Returns: undefined
+      }
       rename_tag: { Args: { _new: string; _old: string }; Returns: undefined }
       search_clips: {
         Args: { q: string }
@@ -258,6 +289,7 @@ export type Database = {
           character_aliases: string[]
           created_at: string
           description: string
+          download_count: number
           download_url: string
           duration: number
           episode: number | null
