@@ -109,79 +109,81 @@ export function HeroCarousel({
         </div>
       )}
 
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-        {slide.kind === "brand" ? (
-          <div key={slideKey} className="hero-fade-in max-w-xl">
-            <p className="text-xs tracking-[0.3em] text-muted-foreground uppercase">
-              Frames that live longer
-            </p>
-            <h1 className="mt-3 font-serif text-5xl leading-[1.05] font-semibold sm:text-6xl">
-              Anime clips for creators
-            </h1>
-            <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
-              High-quality anime clips, organized for editors, creators and fans. Find. Download.
-              Create.
-            </p>
-            <Link
-              to="/browse"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5"
-            >
-              Explore Clips →
-            </Link>
-            {stats ? (
-              <dl className="mt-14 flex flex-wrap gap-x-10 gap-y-4">
-                <div>
-                  <dd className="font-display text-2xl font-bold tabular-nums">
-                    {stats.totalClips}+
-                  </dd>
-                  <dt className="text-xs text-muted-foreground">Clips</dt>
-                </div>
-                <div>
-                  <dd className="font-display text-2xl font-bold tabular-nums">
-                    {stats.totalAnime}+
-                  </dd>
-                  <dt className="text-xs text-muted-foreground">Anime</dt>
-                </div>
-                {stats.qualities.length > 0 ? (
-                  <div>
-                    <dd className="font-display text-2xl font-bold">
-                      {stats.qualities.join(" / ")}
-                    </dd>
-                    <dt className="text-xs text-muted-foreground">Quality</dt>
-                  </div>
-                ) : null}
-                <div>
-                  <dd className="font-display text-2xl font-bold">For</dd>
-                  <dt className="text-xs text-muted-foreground">Creators</dt>
-                </div>
-              </dl>
-            ) : null}
-          </div>
-        ) : (
-          <div key={slideKey} className="hero-fade-in max-w-xl">
-            <p className="eyebrow">Featured anime</p>
-            <h2 className="mt-3 font-display text-4xl leading-[1.02] font-bold tracking-tight uppercase sm:text-5xl">
-              {slide.anime.name}
-            </h2>
-            {slide.anime.description ? (
-              <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
-                {slide.anime.description}
+      <div className="relative mx-auto flex min-h-[600px] max-w-7xl items-center px-4 py-16 sm:px-6 lg:min-h-[640px] lg:px-8 lg:py-24">
+        <div className="w-full">
+          {slide.kind === "brand" ? (
+            <div key={slideKey} className="hero-fade-in max-w-xl">
+              <p className="text-xs tracking-[0.3em] text-muted-foreground uppercase">
+                Frames that live longer
               </p>
-            ) : null}
-            <div className="mt-7 flex flex-wrap items-center gap-4">
+              <h1 className="mt-3 font-serif text-5xl leading-[1.05] font-semibold sm:text-6xl">
+                Anime clips for creators
+              </h1>
+              <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+                High-quality anime clips, organized for editors, creators and fans. Find. Download.
+                Create.
+              </p>
               <Link
-                to="/anime/$slug"
-                params={{ slug: slide.anime.slug }}
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5"
+                to="/browse"
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5"
               >
-                Browse Clips →
+                Explore Clips →
               </Link>
-              <span className="text-xs text-muted-foreground">
-                {slide.anime.clipCount} {slide.anime.clipCount === 1 ? "clip" : "clips"}
-              </span>
+              {stats ? (
+                <dl className="mt-14 flex flex-wrap gap-x-10 gap-y-4">
+                  <div>
+                    <dd className="font-display text-2xl font-bold tabular-nums">
+                      {stats.totalClips}+
+                    </dd>
+                    <dt className="text-xs text-muted-foreground">Clips</dt>
+                  </div>
+                  <div>
+                    <dd className="font-display text-2xl font-bold tabular-nums">
+                      {stats.totalAnime}+
+                    </dd>
+                    <dt className="text-xs text-muted-foreground">Anime</dt>
+                  </div>
+                  {stats.qualities.length > 0 ? (
+                    <div>
+                      <dd className="font-display text-2xl font-bold">
+                        {stats.qualities.join(" / ")}
+                      </dd>
+                      <dt className="text-xs text-muted-foreground">Quality</dt>
+                    </div>
+                  ) : null}
+                  <div>
+                    <dd className="font-display text-2xl font-bold">For</dd>
+                    <dt className="text-xs text-muted-foreground">Creators</dt>
+                  </div>
+                </dl>
+              ) : null}
             </div>
-          </div>
-        )}
+          ) : (
+            <div key={slideKey} className="hero-fade-in max-w-xl">
+              <p className="eyebrow">Featured anime</p>
+              <h2 className="mt-3 font-display text-4xl leading-[1.02] font-bold tracking-tight uppercase sm:text-5xl">
+                {slide.anime.name}
+              </h2>
+              {slide.anime.description ? (
+                <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  {slide.anime.description}
+                </p>
+              ) : null}
+              <div className="mt-7 flex flex-wrap items-center gap-4">
+                <Link
+                  to="/anime/$slug"
+                  params={{ slug: slide.anime.slug }}
+                  className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5"
+                >
+                  Browse Clips →
+                </Link>
+                <span className="text-xs text-muted-foreground">
+                  {slide.anime.clipCount} {slide.anime.clipCount === 1 ? "clip" : "clips"}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {slides.length > 1 && (
