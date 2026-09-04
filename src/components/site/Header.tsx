@@ -27,20 +27,19 @@ export function Header({ logoUrl }: { logoUrl?: string | undefined }) {
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-8">
-          <Link to="/" className="flex min-w-0 items-center gap-2.5" aria-label="Kuragawa Clips home">
+          <Link to="/" className="flex min-w-0 items-center gap-3" aria-label="Kuragawa Clips home">
             {logoUrl ? (
-              <img
-                src={logoUrl}
-                alt="Kuragawa Clips"
-                className="h-9 w-9 shrink-0 rounded-xl object-cover"
-              />
+              <img src={logoUrl} alt="" className="h-9 w-9 shrink-0 rounded-xl object-cover" />
             ) : (
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/15 font-display text-lg font-bold text-primary-soft">
-                K
-              </span>
+              <span aria-hidden className="h-8 w-[3px] shrink-0 rounded-full bg-primary" />
             )}
-            <span className="truncate font-display text-base font-semibold tracking-tight">
-              Kuragawa Clips
+            <span className="min-w-0 leading-none">
+              <span className="block truncate font-display text-base font-bold tracking-wide uppercase">
+                Kuragawa
+              </span>
+              <span className="mt-0.5 block text-[10px] tracking-[0.25em] text-muted-foreground uppercase">
+                Anime Clips
+              </span>
             </span>
           </Link>
 
@@ -93,7 +92,11 @@ export function Header({ logoUrl }: { logoUrl?: string | undefined }) {
             aria-expanded={open}
             className="grid h-10 w-10 place-items-center rounded-xl border border-border bg-surface text-muted-foreground transition-colors hover:text-foreground lg:hidden"
           >
-            {open ? <X aria-hidden className="h-4.5 w-4.5" /> : <Menu aria-hidden className="h-4.5 w-4.5" />}
+            {open ? (
+              <X aria-hidden className="h-4.5 w-4.5" />
+            ) : (
+              <Menu aria-hidden className="h-4.5 w-4.5" />
+            )}
           </button>
         </div>
       </div>

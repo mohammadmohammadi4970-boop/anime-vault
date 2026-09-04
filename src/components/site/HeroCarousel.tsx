@@ -18,7 +18,15 @@ export function pickFeatured(anime: FeaturedAnime[]): FeaturedAnime[] {
     .slice(0, MAX_SLIDES);
 }
 
-export function HeroCarousel({ anime }: { anime: FeaturedAnime[] }) {
+export function HeroCarousel({
+  anime,
+  tagline,
+  stats,
+}: {
+  anime: FeaturedAnime[];
+  tagline: string;
+  stats?: { totalClips: number; totalAnime: number; qualities: string[] } | undefined;
+}) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -98,17 +106,20 @@ export function HeroCarousel({ anime }: { anime: FeaturedAnime[] }) {
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:gap-6 lg:py-20 lg:px-8">
         {/* Text side */}
         <div key={slide.id} className="hero-fade-in">
-          <p className="eyebrow">Anime clips. Higher standards.</p>
-          <h1 className="mt-3 font-display text-4xl font-bold leading-[1.05] sm:text-5xl">
+          <p className="eyebrow flex items-center gap-2">
+            <span aria-hidden className="h-px w-6 bg-primary" />
+            {tagline}
+          </p>
+          <h1 className="mt-3 font-display text-4xl leading-[1.02] font-bold tracking-tight uppercase sm:text-5xl lg:text-6xl">
             {slide.name}
           </h1>
           {slide.description ? (
-            <p className="mt-4 max-w-md text-sm text-muted-foreground sm:text-base">
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
               {slide.description}
             </p>
           ) : null}
 
-          <div className="mt-6 flex flex-wrap items-center gap-4">
+          <div className="mt-7 flex flex-wrap items-center gap-4">
             <Link
               to="/anime/$slug"
               params={{ slug: slide.slug }}
@@ -116,10 +127,44 @@ export function HeroCarousel({ anime }: { anime: FeaturedAnime[] }) {
             >
               Browse Clips →
             </Link>
-            <span className="text-xs text-muted-foreground">
-              {slide.clipCount} {slide.clipCount === 1 ? "clip" : "clips"}
-            </span>
+            <Link
+              to="/browse"
+              className="inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface/70 px-6 py-3 text-sm font-medium transition-colors hover:bg-surface"
+            >
+              Explore All Clips
+            </Link>
           </div>
+
+          {stats ? (
+            <dl className="mt-9 flex flex-wrap gap-x-8 gap-y-3 border-t border-border pt-6">
+              <div>
+                <dt className="text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+                  Clips
+                </dt>
+                <dd className="font-display text-lg font-bold tabular-nums">{stats.totalClips}+</dd>
+              </div>
+              <div>
+                <dt className="text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+                  Anime
+                </dt>
+                <dd className="font-display text-lg font-bold tabular-nums">{stats.totalAnime}+</dd>
+              </div>
+              {stats.qualities.length > 0 ? (
+                <div>
+                  <dt className="text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+                    Quality
+                  </dt>
+                  <dd className="font-display text-lg font-bold">{stats.qualities.join(" / ")}</dd>
+                </div>
+              ) : null}
+              <div>
+                <dt className="text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+                  For
+                </dt>
+                <dd className="font-display text-lg font-bold">Creators</dd>
+              </div>
+            </dl>
+          ) : null}
         </div>
 
         {/* Artwork side */}

@@ -94,9 +94,7 @@ function toClip(
     description: row.description ?? "",
     thumbnail: row.thumbnail_url || FALLBACK_IMAGE,
     screenshots:
-      row.screenshot_urls?.length > 0
-        ? row.screenshot_urls
-        : [row.thumbnail_url || FALLBACK_IMAGE],
+      row.screenshot_urls?.length > 0 ? row.screenshot_urls : [row.thumbnail_url || FALLBACK_IMAGE],
     duration: row.duration ?? 0,
     resolution: row.resolution,
     format: row.format,
@@ -238,10 +236,14 @@ export async function relatedClips(clip: Clip, limit = 4): Promise<Clip[]> {
 export function groupByEpisode(
   clips: Clip[],
 ): Array<{ season: number | null; episode: number | null; label: string; clips: Clip[] }> {
-  const groups = new Map<string, { season: number | null; episode: number | null; clips: Clip[] }>();
+  const groups = new Map<
+    string,
+    { season: number | null; episode: number | null; clips: Clip[] }
+  >();
   for (const clip of clips) {
     const key = `${clip.season ?? "x"}-${clip.episode ?? "x"}`;
-    if (!groups.has(key)) groups.set(key, { season: clip.season, episode: clip.episode, clips: [] });
+    if (!groups.has(key))
+      groups.set(key, { season: clip.season, episode: clip.episode, clips: [] });
     groups.get(key)!.clips.push(clip);
   }
   return Array.from(groups.values())
@@ -268,6 +270,17 @@ export async function animeWithCounts(): Promise<Array<Anime & { clipCount: numb
     ...a,
     clipCount: clips.filter((c) => c.animeSlug === a.slug).length,
   }));
+}
+
+/** Site-wide totals for the homepage stats bar. Real counts, not placeholders. */
+export async function libraryStats(): Promise<{
+  totalClips: number;
+  totalAnime: number;
+  qualities: string[];
+}> {
+  const [clips, anime] = await Promise.all([listClips(), listAnime()]);
+  const qualities = [...new Set(clips.map((c) => c.resolution).filter(Boolean))];
+  return { totalClips: clips.length, totalAnime: anime.length, qualities };
 }
 
 export async function categoriesWithCounts(): Promise<Array<Category & { clipCount: number }>> {

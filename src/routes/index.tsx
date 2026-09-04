@@ -6,7 +6,13 @@ import { ClipGrid } from "@/components/site/ClipCard";
 import { HeroCarousel, pickFeatured } from "@/components/site/HeroCarousel";
 import { Reveal } from "@/components/site/Reveal";
 import { SearchBar } from "@/components/site/SearchBar";
-import { animeWithCounts, homepageContent, listClips, popularSearches } from "@/data/repository";
+import {
+  animeWithCounts,
+  homepageContent,
+  libraryStats,
+  listClips,
+  popularSearches,
+} from "@/data/repository";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -29,19 +35,20 @@ export const Route = createFileRoute("/")({
     clips: await listClips({ limit: 10 }),
     anime: await animeWithCounts(),
     chips: await popularSearches(),
+    stats: await libraryStats(),
   }),
   component: Home,
 });
 
 function Home() {
-  const { content, clips, anime, chips } = Route.useLoaderData();
+  const { content, clips, anime, chips, stats } = Route.useLoaderData();
   const animeNames = Object.fromEntries(anime.map((a) => [a.slug, a.name]));
   const featured = pickFeatured(anime);
 
   return (
     <main>
       {featured.length > 0 ? (
-        <HeroCarousel anime={featured} />
+        <HeroCarousel anime={featured} tagline={content.heroTagline} stats={stats} />
       ) : (
         <section className="relative overflow-hidden border-b border-border">
           <img
