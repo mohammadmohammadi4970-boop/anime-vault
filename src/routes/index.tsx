@@ -11,6 +11,7 @@ import {
   homepageContent,
   libraryStats,
   listClips,
+  popularClips,
   popularSearches,
 } from "@/data/repository";
 
@@ -36,12 +37,13 @@ export const Route = createFileRoute("/")({
     anime: await animeWithCounts(),
     chips: await popularSearches(),
     stats: await libraryStats(),
+    popular: await popularClips(5),
   }),
   component: Home,
 });
 
 function Home() {
-  const { content, clips, anime, chips, stats } = Route.useLoaderData();
+  const { content, clips, anime, chips, stats, popular } = Route.useLoaderData();
   const animeNames = Object.fromEntries(anime.map((a) => [a.slug, a.name]));
   const featured = pickFeatured(anime);
 
@@ -97,6 +99,21 @@ function Home() {
           <SearchBar chips={chips} />
         </div>
       </section>
+
+      {popular.length > 0 ? (
+        <Reveal>
+          <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6 lg:px-8 lg:pt-20">
+            <p className="eyebrow">Trending now</p>
+            <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Popular Clips</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              The most downloaded clips, ranked by real activity.
+            </p>
+            <div className="mt-8">
+              <ClipGrid clips={popular} animeNames={animeNames} />
+            </div>
+          </section>
+        </Reveal>
+      ) : null}
 
       <Reveal>
         <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">

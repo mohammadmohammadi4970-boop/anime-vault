@@ -16,6 +16,7 @@ import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as RequestsRouteImport } from './routes/requests'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AnimeIndexRouteImport } from './routes/anime.index'
@@ -57,6 +58,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RequestsRoute = RequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
   '/privacy': typeof PrivacyRoute
+  '/requests': typeof RequestsRoute
   '/search': typeof SearchRoute
   '/terms': typeof TermsRoute
   '/anime/$slug': typeof AnimeSlugRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
   '/privacy': typeof PrivacyRoute
+  '/requests': typeof RequestsRoute
   '/search': typeof SearchRoute
   '/terms': typeof TermsRoute
   '/anime/$slug': typeof AnimeSlugRoute
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
   '/privacy': typeof PrivacyRoute
+  '/requests': typeof RequestsRoute
   '/search': typeof SearchRoute
   '/terms': typeof TermsRoute
   '/anime/$slug': typeof AnimeSlugRoute
@@ -136,6 +145,7 @@ export interface FileRouteTypes {
     | '/categories'
     | '/contact'
     | '/privacy'
+    | '/requests'
     | '/search'
     | '/terms'
     | '/anime/$slug'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/categories'
     | '/contact'
     | '/privacy'
+    | '/requests'
     | '/search'
     | '/terms'
     | '/anime/$slug'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/categories'
     | '/contact'
     | '/privacy'
+    | '/requests'
     | '/search'
     | '/terms'
     | '/anime/$slug'
@@ -179,6 +191,7 @@ export interface RootRouteChildren {
   CategoriesRoute: typeof CategoriesRoute
   ContactRoute: typeof ContactRoute
   PrivacyRoute: typeof PrivacyRoute
+  RequestsRoute: typeof RequestsRoute
   SearchRoute: typeof SearchRoute
   TermsRoute: typeof TermsRoute
   AnimeSlugRoute: typeof AnimeSlugRoute
@@ -237,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/requests': {
+      id: '/requests'
+      path: '/requests'
+      fullPath: '/requests'
+      preLoaderRoute: typeof RequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -283,6 +303,7 @@ const rootRouteChildren: RootRouteChildren = {
   CategoriesRoute: CategoriesRoute,
   ContactRoute: ContactRoute,
   PrivacyRoute: PrivacyRoute,
+  RequestsRoute: RequestsRoute,
   SearchRoute: SearchRoute,
   TermsRoute: TermsRoute,
   AnimeSlugRoute: AnimeSlugRoute,

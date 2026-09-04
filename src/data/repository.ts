@@ -35,6 +35,7 @@ type ClipRow = {
   resolution: string;
   format: string;
   download_url: string;
+  download_count: number;
   youtube_url: string | null;
   published: boolean;
   created_at: string;
@@ -99,6 +100,7 @@ function toClip(
     resolution: row.resolution,
     format: row.format,
     downloadUrl: row.download_url ?? "",
+    downloadCount: row.download_count ?? 0,
     youtubeUrl: row.youtube_url ?? null,
     published: row.published,
     createdAt: row.created_at,
@@ -281,6 +283,17 @@ export async function libraryStats(): Promise<{
   const [clips, anime] = await Promise.all([listClips(), listAnime()]);
   const qualities = [...new Set(clips.map((c) => c.resolution).filter(Boolean))];
   return { totalClips: clips.length, totalAnime: anime.length, qualities };
+}
+
+/** Clips ranked by real download-button clicks. Only returns clips that have
+ * actually been downloaded at least once, so the homepage never shows a
+ * "Popular" section built on fake/zeroed data. */
+export async function popularClips(limit = 5): Promise<Clip[]> {
+  const clips = await listClips();
+  return clips
+    .filter((c) => c.downloadCount > 0)
+    .sort((a, b) => b.downloadCount - a.downloadCount)
+    .slice(0, limit);
 }
 
 export async function categoriesWithCounts(): Promise<Array<Category & { clipCount: number }>> {

@@ -6,6 +6,7 @@ import { AnimeTab } from "@/components/admin/AnimeTab";
 import { CategoriesTab } from "@/components/admin/CategoriesTab";
 import { ClipsTab } from "@/components/admin/ClipsTab";
 import { ContentTab } from "@/components/admin/ContentTab";
+import { RequestsTab } from "@/components/admin/RequestsTab";
 import { TagsTab } from "@/components/admin/TagsTab";
 import { Btn, Field, TextInput } from "@/components/admin/shared";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +15,10 @@ export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
       { title: "Admin — Kuragawa Clips" },
-      { name: "description", content: "Private admin area for managing the Kuragawa Clips library." },
+      {
+        name: "description",
+        content: "Private admin area for managing the Kuragawa Clips library.",
+      },
       { name: "robots", content: "noindex, nofollow" },
       { property: "og:title", content: "Admin — Kuragawa Clips" },
       { property: "og:description", content: "Private admin area." },
@@ -23,7 +27,7 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-type Tab = "dashboard" | "clips" | "anime" | "categories" | "tags" | "content";
+type Tab = "dashboard" | "clips" | "anime" | "categories" | "tags" | "requests" | "content";
 
 const NAV: Array<{ id: Tab; label: string }> = [
   { id: "dashboard", label: "Dashboard" },
@@ -31,6 +35,7 @@ const NAV: Array<{ id: Tab; label: string }> = [
   { id: "anime", label: "Anime" },
   { id: "categories", label: "Categories" },
   { id: "tags", label: "Tags" },
+  { id: "requests", label: "Requests" },
   { id: "content", label: "Website Content" },
 ];
 
@@ -107,7 +112,9 @@ function AdminPage() {
  * since an account may already exist (e.g. created but awaiting email
  * confirmation) and just needs a normal sign-in once confirmed. */
 function SignInScreen({ adminExists }: { adminExists: boolean | null }) {
-  const [mode, setMode] = useState<"signin" | "signup">(adminExists === false ? "signup" : "signin");
+  const [mode, setMode] = useState<"signin" | "signup">(
+    adminExists === false ? "signup" : "signin",
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -125,7 +132,10 @@ function SignInScreen({ adminExists }: { adminExists: boolean | null }) {
   const createAdmin = async () => {
     setBusy(true);
     setError(null);
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
     if (signUpError) {
       setError(signUpError.message);
       setBusy(false);
@@ -291,6 +301,7 @@ function Dashboard({ email }: { email: string }) {
         {tab === "anime" && <AnimeTab notify={notify} />}
         {tab === "categories" && <CategoriesTab notify={notify} />}
         {tab === "tags" && <TagsTab notify={notify} />}
+        {tab === "requests" && <RequestsTab notify={notify} />}
         {tab === "content" && <ContentTab notify={notify} />}
       </div>
     </main>
@@ -302,7 +313,9 @@ function Overview() {
   const [counts, setCounts] = useState<{ total: number; published: number; draft: number } | null>(
     null,
   );
-  const [recent, setRecent] = useState<Array<{ id: string; title: string; published: boolean }>>([]);
+  const [recent, setRecent] = useState<Array<{ id: string; title: string; published: boolean }>>(
+    [],
+  );
 
   useEffect(() => {
     let active = true;
@@ -352,7 +365,9 @@ function Overview() {
               <span className="truncate">{c.title}</span>
               <span
                 className={`rounded-full px-2.5 py-1 text-[11px] ${
-                  c.published ? "bg-primary/15 text-primary-soft" : "bg-surface-2 text-muted-foreground"
+                  c.published
+                    ? "bg-primary/15 text-primary-soft"
+                    : "bg-surface-2 text-muted-foreground"
                 }`}
               >
                 {c.published ? "Published" : "Draft"}
@@ -360,7 +375,9 @@ function Overview() {
             </div>
           ))}
           {recent.length === 0 && (
-            <p className="text-sm text-muted-foreground">No clips yet — add your first one above.</p>
+            <p className="text-sm text-muted-foreground">
+              No clips yet — add your first one above.
+            </p>
           )}
         </div>
       </div>

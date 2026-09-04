@@ -3,6 +3,7 @@ import { ArrowLeft, Download } from "lucide-react";
 
 import { ClipGrid } from "@/components/site/ClipCard";
 import { formatDuration, getAnime, getClip, listCategories, relatedClips } from "@/data/repository";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/clips/$slug")({
   loader: async ({ params }) => {
@@ -129,6 +130,9 @@ function ClipPage() {
           href={clip.downloadUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => {
+            void supabase.rpc("increment_download_count", { clip_id: clip.id });
+          }}
           className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/85 hover:glow-ring sm:w-auto"
         >
           <Download aria-hidden className="h-4 w-4" /> Download Clip
