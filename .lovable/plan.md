@@ -61,19 +61,17 @@ Add a "Recently Added" section between the search bar and the "Latest Clips" sec
 
 ---
 
-## 5. Replace "For / Creators" placeholder stat (bonus polish)
+## 5. Remove the "For / Creators" placeholder stat
 
 **Where:** `src/components/site/HeroCarousel.tsx`
 
-The hero stat bar currently shows a placeholder "For / Creators" that looks unfinished. Replace it with a real metric: **total downloads** across all clips. The `libraryStats` function returns `totalClips` and `totalAnime`; extend it to also sum `downloadCount` across all published clips.
+The hero stat bar currently ends with a "For / Creators" entry that reads like an unfinished placeholder next to the real Clips / Anime / Quality numbers. Remove it, leaving the three genuine stats. No download numbers are shown anywhere.
 
 ---
 
-## 6. Download count on clip cards (bonus polish)
+## Not included
 
-**Where:** `src/components/site/ClipCard.tsx`
-
-Show a small, muted download count next to the quality/format badges — e.g., "1.2k downloads" — using the existing `clip.downloadCount` field. Only shows when `downloadCount > 0` (no "0 downloads" text on fresh clips). Kept very small and muted so it doesn't draw attention.
+Download counts stay hidden everywhere — not on cards, not on clip pages, not in the hero stats. Click tracking still records in the background as it does today, so the Popular Clips ranking keeps working; the numbers are just never displayed.
 
 ---
 
@@ -81,11 +79,10 @@ Show a small, muted download count next to the quality/format badges — e.g., "
 
 | File | Change |
 |------|--------|
-| `src/components/site/ClipCard.tsx` | Small download button on cards, download count badge |
-| `src/routes/clips.$slug.tsx` | Share buttons (copy/X/Discord) |
+| `src/components/site/ClipCard.tsx` | Small hover download button on cards |
+| `src/routes/clips.$slug.tsx` | Share buttons (copy link / X / Discord) |
 | `src/routes/browse.tsx` | Load More progressive loading |
 | `src/routes/index.tsx` | Recently Added section |
-| `src/components/site/HeroCarousel.tsx` | Replace "For / Creators" with total downloads |
-| `src/data/repository.ts` | Add `totalDownloads` to `libraryStats` |
+| `src/components/site/HeroCarousel.tsx` | Remove placeholder stat |
 
 No database migrations, no new dependencies, no design changes, no new routes.
