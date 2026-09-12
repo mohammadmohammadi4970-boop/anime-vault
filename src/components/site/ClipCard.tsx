@@ -1,14 +1,24 @@
 import { Link } from "@tanstack/react-router";
 import { Download } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { formatDuration } from "@/data/repository";
 import { supabase } from "@/integrations/supabase/client";
+import { youtubePreviewUrl } from "@/lib/youtube";
 import type { Clip } from "@/data/types";
 
 export function ClipCard({ clip, animeName }: { clip: Clip; animeName?: string | undefined }) {
+  const [hovering, setHovering] = useState(false);
+  const previewUrl = clip.youtubeUrl ? youtubePreviewUrl(clip.youtubeUrl) : null;
+  const showPreview = hovering && previewUrl !== null;
+
   return (
-    <article className="group relative overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_20px_50px_-24px_var(--primary)]">
+    <article
+      className="group relative overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_20px_50px_-24px_var(--primary)]"
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
       <Link to="/clips/$slug" params={{ slug: clip.slug }} className="block">
         <div className="relative aspect-video overflow-hidden bg-surface-2">
           <img
@@ -17,8 +27,20 @@ export function ClipCard({ clip, animeName }: { clip: Clip; animeName?: string |
             loading="lazy"
             width={768}
             height={512}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className={`h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 ${showPreview ? "opacity-0" : "opacity-100"}`}
           />
+          {/* Only mounted while actually hovering — never loads for cards
+              that aren't being looked at, so a grid of 20 cards doesn't
+              try to run 20 embedded players at once. */}
+          {showPreview ? (
+            <iframe
+              src={previewUrl}
+              title={`${clip.title} preview`}
+              className="absolute inset-0 h-full w-full"
+              allow="autoplay; encrypted-media"
+              tabIndex={-1}
+            />
+          ) : null}
           <span className="absolute right-2 top-2 rounded-md bg-background/85 px-1.5 py-0.5 font-display text-[11px] font-medium tabular-nums backdrop-blur">
             {formatDuration(clip.duration)}
           </span>

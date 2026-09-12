@@ -6,6 +6,7 @@ import { ClipGrid } from "@/components/site/ClipCard";
 import { Button } from "@/components/ui/button";
 import { formatDuration, getAnime, getClip, listCategories, relatedClips } from "@/data/repository";
 import { supabase } from "@/integrations/supabase/client";
+import { youtubeEmbedUrl } from "@/lib/youtube";
 
 export const Route = createFileRoute("/clips/$slug")({
   loader: async ({ params }) => {
@@ -57,23 +58,6 @@ function Meta({ label, value }: { label: string; value: string }) {
   );
 }
 
-function youtubeEmbedUrl(url: string): string | null {
-  try {
-    const u = new URL(url);
-    let id: string | null = null;
-    if (u.hostname.includes("youtu.be")) {
-      id = u.pathname.slice(1);
-    } else if (u.hostname.includes("youtube.com")) {
-      if (u.pathname === "/watch") id = u.searchParams.get("v");
-      else if (u.pathname.startsWith("/embed/")) id = u.pathname.split("/")[2] ?? null;
-      else if (u.pathname.startsWith("/shorts/")) id = u.pathname.split("/")[2] ?? null;
-    }
-    return id ? `https://www.youtube.com/embed/${id}` : null;
-  } catch {
-    return null;
-  }
-}
-
 function ShareRow({ title }: { title: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -96,7 +80,11 @@ function ShareRow({ title }: { title: string }) {
   const shareOnX = () => {
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent(title);
-    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank", "noopener,noreferrer");
+    window.open(
+      `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
   };
 
   return (
@@ -105,8 +93,12 @@ function ShareRow({ title }: { title: string }) {
         {copied ? <Check aria-hidden /> : <Link2 aria-hidden />}
         {copied ? "Copied!" : "Copy link"}
       </Button>
-      <Button type="button" size="sm" variant="outline" onClick={shareOnX}>X</Button>
-      <Button type="button" size="sm" variant="outline" onClick={copyLink}>Discord</Button>
+      <Button type="button" size="sm" variant="outline" onClick={shareOnX}>
+        X
+      </Button>
+      <Button type="button" size="sm" variant="outline" onClick={copyLink}>
+        Discord
+      </Button>
     </div>
   );
 }
