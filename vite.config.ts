@@ -12,4 +12,8 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Lovable's own sandbox always forces the cloudflare-module preset for its
+  // own preview/build, regardless of this setting — this only takes effect
+  // for builds run elsewhere (e.g. Vercel, which sets process.env.VERCEL).
+  ...(process.env["VERCEL"] ? { nitro: { preset: "vercel" } } : {}),
 });
