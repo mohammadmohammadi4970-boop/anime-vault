@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { ClipGrid } from "@/components/site/ClipCard";
 import { PageShell } from "@/components/site/Section";
+import { Button } from "@/components/ui/button";
 import {
   listAnime,
   listCategories,
@@ -11,6 +12,8 @@ import {
   listQualities,
 } from "@/data/repository";
 import type { SortOption } from "@/data/types";
+
+const PAGE_SIZE = 12;
 
 export const Route = createFileRoute("/browse")({
   head: () => ({
@@ -79,6 +82,7 @@ function BrowsePage() {
   const [category, setCategory] = useState("");
   const [quality, setQuality] = useState("");
   const [sort, setSort] = useState<SortOption>("newest");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const animeNames = useMemo(
     () => Object.fromEntries(anime.map((a) => [a.slug, a.name])),
@@ -105,6 +109,11 @@ function BrowsePage() {
     else out = [...out].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     return out;
   }, [clips, search, animeSlug, character, category, quality, sort, animeNames]);
+
+  const filterKey = `${search}|${animeSlug}|${character}|${category}|${quality}|${sort}`;
+  useEffect(() => setVisibleCount(PAGE_SIZE), [filterKey]);
+
+  const visible = filtered.slice(0, visibleCount);
 
   return (
     <PageShell
@@ -179,8 +188,19 @@ function BrowsePage() {
       </p>
 
       <div className="mt-4">
-        <ClipGrid clips={filtered} animeNames={animeNames} />
+        <ClipGrid clips={visible} animeNames={animeNames} />
       </div>
+
+      {visibleCount < filtered.length ? (
+        <div className="mt-8 flex flex-col items-center gap-2">
+          <Button variant="outline" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}>
+            Load More
+          </Button>
+          <p className="text-xs text-muted-foreground">
+            Showing {visible.length} of {filtered.length}
+          </p>
+        </div>
+      ) : null}
     </PageShell>
   );
 }

@@ -43,6 +43,8 @@ function Home() {
   const { clips, anime, chips, stats, popular } = Route.useLoaderData();
   const animeNames = Object.fromEntries(anime.map((a) => [a.slug, a.name]));
   const featured = pickFeatured(anime);
+  const popularIds = new Set(popular.map((clip) => clip.id));
+  const recent = clips.filter((clip) => !popularIds.has(clip.id)).slice(0, 6);
 
   return (
     <main>
@@ -53,6 +55,18 @@ function Home() {
           <SearchBar chips={chips} />
         </div>
       </section>
+
+      {recent.length > 0 ? (
+        <Reveal>
+          <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6 lg:px-8 lg:pt-20">
+            <p className="eyebrow">Fresh uploads</p>
+            <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Recently Added</h2>
+            <div className="mt-8">
+              <ClipGrid clips={recent} animeNames={animeNames} />
+            </div>
+          </section>
+        </Reveal>
+      ) : null}
 
       {popular.length > 0 ? (
         <Reveal>

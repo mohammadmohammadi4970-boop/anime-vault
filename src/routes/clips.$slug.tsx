@@ -1,7 +1,9 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, Check, Download, Link2 } from "lucide-react";
+import { useState } from "react";
 
 import { ClipGrid } from "@/components/site/ClipCard";
+import { Button } from "@/components/ui/button";
 import { formatDuration, getAnime, getClip, listCategories, relatedClips } from "@/data/repository";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -72,6 +74,43 @@ function youtubeEmbedUrl(url: string): string | null {
   }
 }
 
+function ShareRow({ title }: { title: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const copyLink = async () => {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const input = document.createElement("textarea");
+      input.value = url;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand("copy");
+      input.remove();
+    }
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2000);
+  };
+
+  const shareOnX = () => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(title);
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank", "noopener,noreferrer");
+  };
+
+  return (
+    <div className="mt-4 flex flex-wrap gap-2" aria-label="Share clip">
+      <Button type="button" size="sm" variant="outline" onClick={copyLink}>
+        {copied ? <Check aria-hidden /> : <Link2 aria-hidden />}
+        {copied ? "Copied!" : "Copy link"}
+      </Button>
+      <Button type="button" size="sm" variant="outline" onClick={shareOnX}>X</Button>
+      <Button type="button" size="sm" variant="outline" onClick={copyLink}>Discord</Button>
+    </div>
+  );
+}
+
 function ClipPage() {
   const { clip, animeName, categoryName, related } = Route.useLoaderData();
   const embedUrl = clip.youtubeUrl ? youtubeEmbedUrl(clip.youtubeUrl) : null;
@@ -140,6 +179,7 @@ function ClipPage() {
         <p className="mt-2 text-xs text-muted-foreground">
           Downloads open the external file link stored on this clip's record.
         </p>
+        <ShareRow title={clip.title} />
       </div>
 
       <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted-foreground">
