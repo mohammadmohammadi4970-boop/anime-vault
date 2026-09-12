@@ -151,10 +151,6 @@ export function HeroCarousel({
                       <dt className="text-xs text-muted-foreground">Quality</dt>
                     </div>
                   ) : null}
-                  <div>
-                    <dd className="font-display text-2xl font-bold">For</dd>
-                    <dt className="text-xs text-muted-foreground">Creators</dt>
-                  </div>
                 </dl>
               ) : null}
             </div>
