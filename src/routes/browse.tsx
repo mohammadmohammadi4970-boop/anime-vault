@@ -111,7 +111,7 @@ function BrowsePage() {
 
   // Reset pagination when any filter changes
   const filterKey = `${search}|${animeSlug}|${character}|${category}|${quality}|${sort}`;
-  useMemo(() => setVisibleCount(PAGE_SIZE), [filterKey]);
+  useEffect(() => setVisibleCount(PAGE_SIZE), [filterKey]);
 
   const visible = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
