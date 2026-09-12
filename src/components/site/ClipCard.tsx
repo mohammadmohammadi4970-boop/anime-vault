@@ -52,7 +52,7 @@ export function ClipCard({ clip, animeName }: { clip: Clip; animeName?: string |
           void supabase.rpc("increment_download_count", { clip_id: clip.id });
           window.open(clip.downloadUrl, "_blank", "noopener,noreferrer");
         }}
-        className="absolute left-2 top-[calc(56.25%-2.5rem)] h-8 w-8 border-border bg-background/80 text-muted-foreground opacity-0 backdrop-blur hover:bg-background hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 max-sm:opacity-100"
+        className="absolute left-2 top-[calc(56.25%-2.5rem)] h-8 w-8 border-none bg-primary text-primary-foreground opacity-0 shadow-[0_2px_10px_rgba(0,0,0,0.45)] hover:bg-primary/85 focus-visible:opacity-100 group-hover:opacity-100 max-sm:opacity-100"
       >
         <Download aria-hidden className="h-3.5 w-3.5" />
       </Button>
