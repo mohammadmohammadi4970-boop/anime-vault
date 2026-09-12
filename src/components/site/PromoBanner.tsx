@@ -26,11 +26,13 @@ export function PromoBanner() {
 
         <Link
           to="/requests"
-          className="absolute inline-flex items-center gap-[0.35em] rounded-[0.5em] bg-primary px-[0.9em] py-[0.55em] font-semibold whitespace-nowrap text-primary-foreground transition-transform [-webkit-tap-highlight-color:transparent] hover:-translate-y-0.5 active:scale-[0.97]"
+          className="absolute flex items-center justify-center rounded-[0.5em] bg-primary font-semibold whitespace-nowrap text-primary-foreground transition-transform [-webkit-tap-highlight-color:transparent] hover:-translate-y-0.5 active:scale-[0.97]"
           style={{
-            left: "53.4%",
-            top: "68%",
-            fontSize: "clamp(0.55rem, 1.05vw, 0.85rem)",
+            left: "52%",
+            top: "61%",
+            width: "18%",
+            height: "16%",
+            fontSize: "clamp(0.55rem, 1.3vw, 0.9rem)",
           }}
         >
           Request a Clip →
