@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { ClipGrid } from "@/components/site/ClipCard";
 import { PageShell } from "@/components/site/Section";
@@ -11,6 +11,8 @@ import {
   listQualities,
 } from "@/data/repository";
 import type { SortOption } from "@/data/types";
+
+const PAGE_SIZE = 12;
 
 export const Route = createFileRoute("/browse")({
   head: () => ({
@@ -79,6 +81,7 @@ function BrowsePage() {
   const [category, setCategory] = useState("");
   const [quality, setQuality] = useState("");
   const [sort, setSort] = useState<SortOption>("newest");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const animeNames = useMemo(
     () => Object.fromEntries(anime.map((a) => [a.slug, a.name])),
@@ -105,6 +108,13 @@ function BrowsePage() {
     else out = [...out].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     return out;
   }, [clips, search, animeSlug, character, category, quality, sort, animeNames]);
+
+  // Reset pagination when any filter changes
+  const filterKey = `${search}|${animeSlug}|${character}|${category}|${quality}|${sort}`;
+  useEffect(() => setVisibleCount(PAGE_SIZE), [filterKey]);
+
+  const visible = filtered.slice(0, visibleCount);
+  const hasMore = visibleCount < filtered.length;
 
   return (
     <PageShell
@@ -179,8 +189,23 @@ function BrowsePage() {
       </p>
 
       <div className="mt-4">
-        <ClipGrid clips={filtered} animeNames={animeNames} />
+        <ClipGrid clips={visible} animeNames={animeNames} />
       </div>
+
+      {hasMore ? (
+        <div className="mt-8 flex flex-col items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-6 py-3 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-surface-2"
+          >
+            Load More
+          </button>
+          <p className="text-xs text-muted-foreground">
+            Showing {visible.length} of {filtered.length}
+          </p>
+        </div>
+      ) : null}
     </PageShell>
   );
 }

@@ -2,36 +2,35 @@ import { Link } from "@tanstack/react-router";
 
 import heroBanner from "@/assets/hero-banner.jpg";
 
-/**
- * The banner image itself already has "Turn Moments Into Masterpieces",
- * the tagline, and the Japanese/EDIT-SHARE-INSPIRE labels baked into its
- * pixels — so this component adds nothing on top except:
- *  - a real, working button, centered on roughly where the original
- *    "Join Kuragawa" button sits (as a % of the image, so it stays
- *    aligned at any screen size), sized by its own content so it never
- *    wraps awkwardly
- */
 export function PromoBanner() {
   return (
-    <section className="border-y border-border bg-background">
-      <div className="relative mx-auto aspect-[2172/724] w-full max-w-7xl">
-        <img
-          src={heroBanner}
-          alt="Turn moments into masterpieces. High-quality clips, no watermarks, organized and easy to use."
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+    <section className="relative isolate overflow-hidden border-y border-border">
+      <img
+        src={heroBanner}
+        alt=""
+        aria-hidden
+        className="absolute inset-0 -z-10 h-full w-full object-cover"
+      />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-background/90 via-background/70 to-background/95" />
 
-        <Link
-          to="/requests"
-          className="absolute inline-flex items-center gap-[0.35em] rounded-[0.5em] bg-primary px-[0.9em] py-[0.55em] font-semibold whitespace-nowrap text-primary-foreground transition-transform [-webkit-tap-highlight-color:transparent] hover:-translate-y-0.5 active:scale-[0.97]"
-          style={{
-            left: "53.4%",
-            top: "68%",
-            fontSize: "clamp(0.55rem, 1.05vw, 0.85rem)",
-          }}
-        >
-          Request a Clip →
-        </Link>
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
+        <div className="ml-auto max-w-md text-right lg:pr-16">
+          <p className="text-xs tracking-[0.3em] text-muted-foreground uppercase">
+            For editors. By fans.
+          </p>
+          <h2 className="mt-2 font-serif text-3xl leading-[1.1] font-semibold sm:text-4xl">
+            Turn moments into masterpieces.
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+            High-quality clips. No watermarks. Organized and easy to use.
+          </p>
+          <Link
+            to="/requests"
+            className="mt-5 inline-flex items-center gap-2 rounded-xl border border-primary/40 bg-surface/80 px-5 py-2.5 text-sm font-medium text-primary-soft backdrop-blur transition-all hover:border-primary/60 hover:bg-surface"
+          >
+            Request a Clip →
+          </Link>
+        </div>
       </div>
     </section>
   );

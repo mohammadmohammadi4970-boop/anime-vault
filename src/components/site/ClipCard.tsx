@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { Download } from "lucide-react";
 
 import { formatDuration } from "@/data/repository";
+import { supabase } from "@/integrations/supabase/client";
 import type { Clip } from "@/data/types";
 
 export function ClipCard({ clip, animeName }: { clip: Clip; animeName?: string | undefined }) {
@@ -19,6 +21,23 @@ export function ClipCard({ clip, animeName }: { clip: Clip; animeName?: string |
           <span className="absolute right-2 top-2 rounded-md bg-background/85 px-1.5 py-0.5 font-display text-[11px] font-medium tabular-nums backdrop-blur">
             {formatDuration(clip.duration)}
           </span>
+          {/* Small download button — hover only on desktop, always on touch.
+              Goes straight to Google Drive without opening the detail page. */}
+          <a
+            href={clip.downloadUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              void supabase.rpc("increment_download_count", { clip_id: clip.id });
+              window.open(clip.downloadUrl, "_blank", "noopener,noreferrer");
+            }}
+            aria-label={`Download ${clip.title}`}
+            className="absolute bottom-2 left-2 grid h-8 w-8 place-items-center rounded-lg border border-border bg-background/80 text-muted-foreground opacity-0 backdrop-blur transition-all hover:text-foreground hover:bg-background/90 focus-visible:opacity-100 group-hover:opacity-100 max-sm:opacity-100"
+          >
+            <Download aria-hidden className="h-3.5 w-3.5" />
+          </a>
         </div>
 
         <div className="p-3.5">
