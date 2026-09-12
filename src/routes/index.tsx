@@ -44,6 +44,10 @@ function Home() {
   const animeNames = Object.fromEntries(anime.map((a) => [a.slug, a.name]));
   const featured = pickFeatured(anime);
 
+  // Exclude clips already shown in Popular from Recently Added
+  const popularIds = new Set(popular.map((c) => c.id));
+  const recent = clips.filter((c) => !popularIds.has(c.id)).slice(0, 6);
+
   return (
     <main>
       <HeroCarousel anime={featured} stats={stats} />
@@ -53,6 +57,21 @@ function Home() {
           <SearchBar chips={chips} />
         </div>
       </section>
+
+      {recent.length > 0 ? (
+        <Reveal>
+          <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+            <p className="eyebrow">Fresh uploads</p>
+            <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Recently Added</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              The latest clips added to the library.
+            </p>
+            <div className="mt-8">
+              <ClipGrid clips={recent} animeNames={animeNames} />
+            </div>
+          </section>
+        </Reveal>
+      ) : null}
 
       {popular.length > 0 ? (
         <Reveal>
