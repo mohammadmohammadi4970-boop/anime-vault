@@ -1,11 +1,14 @@
 import { Link } from "@tanstack/react-router";
+import { Download } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { formatDuration } from "@/data/repository";
+import { supabase } from "@/integrations/supabase/client";
 import type { Clip } from "@/data/types";
 
 export function ClipCard({ clip, animeName }: { clip: Clip; animeName?: string | undefined }) {
   return (
-    <article className="group overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_20px_50px_-24px_var(--primary)]">
+    <article className="group relative overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_20px_50px_-24px_var(--primary)]">
       <Link to="/clips/$slug" params={{ slug: clip.slug }} className="block">
         <div className="relative aspect-video overflow-hidden bg-surface-2">
           <img
@@ -39,6 +42,20 @@ export function ClipCard({ clip, animeName }: { clip: Clip; animeName?: string |
           </div>
         </div>
       </Link>
+      <Button
+        type="button"
+        variant="outline"
+        size="icon"
+        aria-label={`Download ${clip.title}`}
+        title="Download clip"
+        onClick={() => {
+          void supabase.rpc("increment_download_count", { clip_id: clip.id });
+          window.open(clip.downloadUrl, "_blank", "noopener,noreferrer");
+        }}
+        className="absolute left-2 top-[calc(56.25%-2.5rem)] h-8 w-8 border-border bg-background/80 text-muted-foreground opacity-0 backdrop-blur hover:bg-background hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 max-sm:opacity-100"
+      >
+        <Download aria-hidden className="h-3.5 w-3.5" />
+      </Button>
     </article>
   );
 }
