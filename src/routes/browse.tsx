@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { ClipGrid } from "@/components/site/ClipCard";
 import { PageShell } from "@/components/site/Section";
