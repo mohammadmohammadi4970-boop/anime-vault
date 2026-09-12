@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://anime-vault-gamma-nine.vercel.app/sitemap.xml
+Sitemap: https://kuragawaclips.vercel.app/sitemap.xml
