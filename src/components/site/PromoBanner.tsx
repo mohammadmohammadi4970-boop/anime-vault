@@ -23,7 +23,7 @@ export function PromoBanner() {
 
         <Link
           to="/requests"
-          className="absolute inline-flex items-center gap-[0.35em] rounded-[0.5em] bg-primary px-[0.9em] py-[0.55em] font-semibold whitespace-nowrap text-primary-foreground transition-transform hover:-translate-y-0.5"
+          className="absolute inline-flex items-center gap-[0.35em] rounded-[0.5em] bg-primary px-[0.9em] py-[0.55em] font-semibold whitespace-nowrap text-primary-foreground transition-transform [-webkit-tap-highlight-color:transparent] hover:-translate-y-0.5 active:scale-[0.97]"
           style={{
             left: "53.4%",
             top: "68%",
