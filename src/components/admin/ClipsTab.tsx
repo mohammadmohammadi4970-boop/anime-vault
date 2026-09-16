@@ -100,6 +100,13 @@ export function ClipsTab() {
         thumbnail_url: rest.thumbnail_url || null,
         youtube_url: rest.youtube_url || null,
       };
+      // The DB row carries extra generated/read-only columns (notably
+      // search_vector, a GENERATED ALWAYS STORED column) that ClipRow
+      // doesn't type but still exist at runtime since rows are fetched with
+      // select("*"). Postgres rejects any write that includes a generated
+      // column at all — even re-sending its own current value — so it must
+      // be stripped here rather than just omitted from the type.
+      delete (payload as Record<string, unknown>)["search_vector"];
       const res = id
         ? await supabase.from("clips").update(payload).eq("id", id)
         : await supabase.from("clips").insert(payload);
