@@ -29,18 +29,29 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  loader: async () => ({
-    clips: await listClips({ limit: 10 }),
-    anime: await animeWithCounts(),
-    chips: await popularSearches(),
-    stats: await libraryStats(),
-    popular: await popularClips(5),
-  }),
+  loader: async () => {
+    const [clips, anime, chips, stats, tracked] = await Promise.all([
+      listClips({ limit: 10 }),
+      animeWithCounts(),
+      popularSearches(),
+      libraryStats(),
+      popularClips(6),
+    ]);
+
+    // Until real downloads exist, showcase a random handful instead of an empty state.
+    const fallback =
+      tracked.length > 0
+        ? []
+        : [...(await listClips())].sort(() => Math.random() - 0.5).slice(0, 6);
+
+    return { clips, anime, chips, stats, popular: tracked, fallback };
+  },
   component: Home,
 });
 
 function Home() {
-  const { clips, anime, chips, stats, popular } = Route.useLoaderData();
+  const { clips, anime, chips, stats, popular, fallback } = Route.useLoaderData();
+  const showcase = popular.length > 0 ? popular : fallback;
   const animeNames = Object.fromEntries(anime.map((a) => [a.slug, a.name]));
   const featured = pickFeatured(anime);
   const popularIds = new Set(popular.map((clip) => clip.id));
@@ -78,32 +89,24 @@ function Home() {
         </Reveal>
       ) : null}
 
-      <Reveal>
-        <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6 lg:px-8 lg:pt-20">
-          <p className="eyebrow">Most downloaded</p>
-          <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Most Downloaded Clips</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            The most downloaded clips, ranked by real activity.
-          </p>
-          {popular.length > 0 ? (
+      {showcase.length > 0 ? (
+        <Reveal>
+          <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6 lg:px-8 lg:pt-20">
+            <p className="eyebrow">{popular.length > 0 ? "Most downloaded" : "Editor picks"}</p>
+            <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">
+              {popular.length > 0 ? "Most Downloaded Clips" : "Trending Picks"}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {popular.length > 0
+                ? "The most downloaded clips, ranked by real activity."
+                : "A handpicked selection from the library — refreshed every visit."}
+            </p>
             <div className="mt-8">
-              <ClipGrid clips={popular} animeNames={animeNames} />
+              <ClipGrid clips={showcase} animeNames={animeNames} />
             </div>
-          ) : (
-            <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface/40 p-10 text-center">
-              <p className="text-sm text-muted-foreground">
-                No downloads yet — popular clips will appear here once the community starts downloading.
-              </p>
-              <Link
-                to="/browse"
-                className="mt-4 inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-surface-2"
-              >
-                Browse all clips
-              </Link>
-            </div>
-          )}
-        </section>
-      </Reveal>
+          </section>
+        </Reveal>
+      ) : null}
 
       <PromoBanner />
     </main>
