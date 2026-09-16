@@ -29,18 +29,29 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  loader: async () => ({
-    clips: await listClips({ limit: 10 }),
-    anime: await animeWithCounts(),
-    chips: await popularSearches(),
-    stats: await libraryStats(),
-    popular: await popularClips(5),
-  }),
+  loader: async () => {
+    const [clips, anime, chips, stats, tracked] = await Promise.all([
+      listClips({ limit: 10 }),
+      animeWithCounts(),
+      popularSearches(),
+      libraryStats(),
+      popularClips(6),
+    ]);
+
+    // Until real downloads exist, showcase a random handful instead of an empty state.
+    const fallback =
+      tracked.length > 0
+        ? []
+        : [...(await listClips())].sort(() => Math.random() - 0.5).slice(0, 6);
+
+    return { clips, anime, chips, stats, popular: tracked, fallback };
+  },
   component: Home,
 });
 
 function Home() {
-  const { clips, anime, chips, stats, popular } = Route.useLoaderData();
+  const { clips, anime, chips, stats, popular, fallback } = Route.useLoaderData();
+  const showcase = popular.length > 0 ? popular : fallback;
   const animeNames = Object.fromEntries(anime.map((a) => [a.slug, a.name]));
   const featured = pickFeatured(anime);
   const popularIds = new Set(popular.map((clip) => clip.id));
