@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { Btn, Field, ImageField, TextArea, TextInput, csv, parseCsv, slugify } from "./shared";
+import { TagMultiSelect } from "./TagMultiSelect";
 import { supabase } from "@/integrations/supabase/client";
 
 type ClipRow = {
@@ -232,10 +233,10 @@ export function ClipsTab() {
                 onChange={(e) => setDraft({ ...draft, anime_aliases: parseCsv(e.target.value) })}
               />
             </Field>
-            <Field label="Tags (comma separated)">
-              <TextInput
-                value={csv(draft.tags)}
-                onChange={(e) => setDraft({ ...draft, tags: parseCsv(e.target.value) })}
+            <Field label="Tags">
+              <TagMultiSelect
+                value={draft.tags}
+                onChange={(next) => setDraft({ ...draft, tags: next })}
               />
             </Field>
             <Field label="Season (optional)">
