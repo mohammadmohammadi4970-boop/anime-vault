@@ -1,88 +1,30 @@
-# Kuragawa Clips — UX Enhancements
+# Homepage — remove the duplicate, surface "Most Downloaded"
 
-## What's changing
+## Problem
+The homepage shows two near-identical sections: "Recently Added" (newest clips) and "Latest Clips" (also newest clips). With a small library they show the exact same cards; even as it grows both are date-sorted, so they overlap heavily.
 
-Four confirmed features plus two small polish items the user agreed to hear about.
+## What changes
 
----
+### 1. Remove the duplicate "Latest Clips" section
+Delete the "Latest Clips" section from `src/routes/index.tsx`. Move its "View all → /browse" link onto the "Recently Added" section so there's still a clear path to the full browse page.
 
-## 1. Small download button on clip cards
+Homepage becomes: Hero → Search → Recently Added → Most Downloaded → PromoBanner.
 
-**Where:** `src/components/site/ClipCard.tsx`
+### 2. Surface "Most Downloaded" (the existing Popular Clips section)
+The site already has a "Popular Clips" section ranked by real `download_count`. Today it's hidden because no clips have been downloaded yet (no traffic). Change it so it's always visible and clearly labeled "Most Downloaded":
 
-Add a small download icon button in the thumbnail overlay (top-left corner, opposite the duration badge). It links directly to `clip.downloadUrl` and fires `increment_download_count` on click — same behavior as the clip page download button.
+- Relabel eyebrow `Trending now` → `Most downloaded`, heading `Popular Clips` → `Most Downloaded Clips`.
+- When the list is **empty** (no downloads yet), render a small graceful empty state instead of hiding the section: a muted line like "No downloads yet — popular clips will appear here once the community starts downloading." plus a "Browse all clips" link to `/browse`. This keeps the section visibly present as the user requested, and it fills with real data automatically once traffic starts today.
+- When the list has clips, render the existing `ClipGrid` as today (no download numbers shown, per the existing rule).
 
-Design rules:
-- Small: ~28px, subtle `bg-background/70 backdrop-blur` pill, just a `Download` icon (no text).
-- Appears on hover only (desktop) or always visible (mobile) so it doesn't compete with the thumbnail.
-- Doesn't open the clip detail page — goes straight to Google Drive.
-- The entire card is still clickable to the detail page; the download button uses `e.preventDefault()` + `e.stopPropagation()` to avoid navigation.
+This is honest — it never fakes popularity. It just stops hiding the section before downloads exist.
 
----
-
-## 2. Share buttons on clip pages
-
-**Where:** `src/routes/clips.$slug.tsx`
-
-Add a compact share row below the download button, containing:
-- **Copy link** — copies the current clip page URL to clipboard, shows "Copied!" feedback for 2 seconds.
-- **X / Twitter** — opens `https://twitter.com/intent/tweet?url=<clip-url>&text=<clip-title>`
-- **Discord** — copies the URL (Discord doesn't have a native share URL; the copy + toast covers this).
-
-Design rules:
-- Small, muted text buttons with icons — `h-9 px-3 text-xs text-muted-foreground`.
-- No large social-share blocks; blends into the page.
-
----
-
-## 3. Load More on Browse
-
-**Where:** `src/routes/browse.tsx`
-
-Replace the "render all clips at once" behavior with progressive loading:
-- Show first 12 clips after filtering.
-- A "Load More" button below the grid appends the next 12 each click.
-- Button shows "Showing X of Y" and hides when all clips are visible.
-- Reset to 12 when filters/search/sort change (so users don't see stale paginated results from a different filter set).
-
-No new data fetching — still uses the existing loader. Purely client-side slicing of the already-filtered array.
-
----
-
-## 4. Recently Added section on homepage
-
-**Where:** `src/routes/index.tsx`
-
-Add a "Recently Added" section between the search bar and the "Latest Clips" section:
-- Shows the 6 newest clips (sorted by `createdAt` desc, excluding any already shown in Popular Clips).
-- Uses the existing `ClipGrid` component.
-- Always renders content (unlike Popular Clips which only shows when downloads exist).
-- Relabels the existing "Latest Clips" section to "Browse All" since it now overlaps less.
-
----
-
-## 5. Remove the "For / Creators" placeholder stat
-
-**Where:** `src/components/site/HeroCarousel.tsx`
-
-The hero stat bar currently ends with a "For / Creators" entry that reads like an unfinished placeholder next to the real Clips / Anime / Quality numbers. Remove it, leaving the three genuine stats. No download numbers are shown anywhere.
-
----
-
-## Not included
-
-Download counts stay hidden everywhere — not on cards, not on clip pages, not in the hero stats. Click tracking still records in the background as it does today, so the Popular Clips ranking keeps working; the numbers are just never displayed.
-
----
+### 3. "Most Searched" — already present, no change
+The SearchBar already shows "Popular:" chips (popular searches) derived from tags/admin config. That covers "Most Searched" without a duplicate section. No new work.
 
 ## Files touched
-
 | File | Change |
 |------|--------|
-| `src/components/site/ClipCard.tsx` | Small hover download button on cards |
-| `src/routes/clips.$slug.tsx` | Share buttons (copy link / X / Discord) |
-| `src/routes/browse.tsx` | Load More progressive loading |
-| `src/routes/index.tsx` | Recently Added section |
-| `src/components/site/HeroCarousel.tsx` | Remove placeholder stat |
+| `src/routes/index.tsx` | Remove "Latest Clips" section; add View-all link to Recently Added; relabel Popular Clips → Most Downloaded; add empty state |
 
-No database migrations, no new dependencies, no design changes, no new routes.
+No database migrations, no new dependencies, no design changes, no new routes. Download counts stay hidden everywhere; tracking keeps running in the background as today.
