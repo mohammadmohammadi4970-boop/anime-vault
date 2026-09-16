@@ -7,3 +7,4 @@
 - [x] Recently Added section on homepage
 - [x] Remove placeholder hero statistic
 - [x] Reduce PromoBanner to a subtle Request a Clip action
+- [x] Remove duplicate "Latest Clips" section; surface "Most Downloaded" with empty state

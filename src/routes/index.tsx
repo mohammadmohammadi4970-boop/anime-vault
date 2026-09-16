@@ -59,8 +59,18 @@ function Home() {
       {recent.length > 0 ? (
         <Reveal>
           <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6 lg:px-8 lg:pt-20">
-            <p className="eyebrow">Fresh uploads</p>
-            <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Recently Added</h2>
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
+              <div className="min-w-0">
+                <p className="eyebrow">Fresh uploads</p>
+                <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Recently Added</h2>
+              </div>
+              <Link
+                to="/browse"
+                className="shrink-0 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                View all
+              </Link>
+            </div>
             <div className="mt-8">
               <ClipGrid clips={recent} animeNames={animeNames} />
             </div>
@@ -68,39 +78,30 @@ function Home() {
         </Reveal>
       ) : null}
 
-      {popular.length > 0 ? (
-        <Reveal>
-          <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6 lg:px-8 lg:pt-20">
-            <p className="eyebrow">Trending now</p>
-            <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Popular Clips</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              The most downloaded clips, ranked by real activity.
-            </p>
+      <Reveal>
+        <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6 lg:px-8 lg:pt-20">
+          <p className="eyebrow">Most downloaded</p>
+          <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Most Downloaded Clips</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            The most downloaded clips, ranked by real activity.
+          </p>
+          {popular.length > 0 ? (
             <div className="mt-8">
               <ClipGrid clips={popular} animeNames={animeNames} />
             </div>
-          </section>
-        </Reveal>
-      ) : null}
-
-      <Reveal>
-        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
-            <div className="min-w-0">
-              <p className="eyebrow">Explore</p>
-              <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Latest Clips</h2>
+          ) : (
+            <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface/40 p-10 text-center">
+              <p className="text-sm text-muted-foreground">
+                No downloads yet — popular clips will appear here once the community starts downloading.
+              </p>
+              <Link
+                to="/browse"
+                className="mt-4 inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-surface-2"
+              >
+                Browse all clips
+              </Link>
             </div>
-            <Link
-              to="/browse"
-              className="shrink-0 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              View all
-            </Link>
-          </div>
-
-          <div className="mt-8">
-            <ClipGrid clips={clips} animeNames={animeNames} />
-          </div>
+          )}
         </section>
       </Reveal>
 
