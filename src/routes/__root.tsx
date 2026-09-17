@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { AmbientBackground } from "../components/site/AmbientBackground";
 import { Footer } from "../components/site/Footer";
 import { Header } from "../components/site/Header";
+import { TrafficTracker } from "../components/site/TrafficTracker";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { footerContent, homepageContent } from "../data/repository";
 
@@ -144,6 +145,7 @@ function RootComponent() {
         </div>
         <Footer content={data?.footer} logoUrl={data?.logoUrl} />
       </div>
+      <TrafficTracker />
     </QueryClientProvider>
   );
 }
