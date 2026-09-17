@@ -145,6 +145,7 @@ function RootComponent() {
         </div>
         <Footer content={data?.footer} logoUrl={data?.logoUrl} />
       </div>
+      <TrafficTracker />
     </QueryClientProvider>
   );
 }
