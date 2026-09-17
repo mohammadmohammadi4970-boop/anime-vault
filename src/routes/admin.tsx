@@ -27,10 +27,19 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-type Tab = "dashboard" | "clips" | "anime" | "categories" | "tags" | "requests" | "content";
+type Tab =
+  | "dashboard"
+  | "traffic"
+  | "clips"
+  | "anime"
+  | "categories"
+  | "tags"
+  | "requests"
+  | "content";
 
 const NAV: Array<{ id: Tab; label: string }> = [
   { id: "dashboard", label: "Dashboard" },
+  { id: "traffic", label: "Traffic" },
   { id: "clips", label: "Clips" },
   { id: "anime", label: "Anime" },
   { id: "categories", label: "Categories" },
