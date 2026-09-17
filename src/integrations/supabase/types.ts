@@ -173,6 +173,36 @@ export type Database = {
           },
         ]
       }
+      page_views: {
+        Row: {
+          country: string
+          created_at: string
+          device: string
+          id: string
+          path: string
+          referrer_kind: string
+          visitor_hash: string
+        }
+        Insert: {
+          country?: string
+          created_at?: string
+          device?: string
+          id?: string
+          path: string
+          referrer_kind?: string
+          visitor_hash: string
+        }
+        Update: {
+          country?: string
+          created_at?: string
+          device?: string
+          id?: string
+          path?: string
+          referrer_kind?: string
+          visitor_hash?: string
+        }
+        Relationships: []
+      }
       requests: {
         Row: {
           anime_name: string
@@ -314,6 +344,39 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      traffic_breakdown: {
+        Args: { _days: number; _dimension: string }
+        Returns: {
+          label: string
+          value: number
+        }[]
+      }
+      traffic_clip_views: {
+        Args: { _days: number }
+        Returns: {
+          downloads: number
+          slug: string
+          title: string
+          views: number
+        }[]
+      }
+      traffic_daily: {
+        Args: { _days: number }
+        Returns: {
+          day: string
+          pageviews: number
+          visitors: number
+        }[]
+      }
+      traffic_totals: {
+        Args: { _days: number }
+        Returns: {
+          pageviews: number
+          prev_pageviews: number
+          prev_visitors: number
+          visitors: number
+        }[]
       }
     }
     Enums: {
