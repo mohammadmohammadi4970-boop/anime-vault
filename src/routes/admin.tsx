@@ -8,6 +8,7 @@ import { ClipsTab } from "@/components/admin/ClipsTab";
 import { ContentTab } from "@/components/admin/ContentTab";
 import { RequestsTab } from "@/components/admin/RequestsTab";
 import { TagsTab } from "@/components/admin/TagsTab";
+import { TrafficTab } from "@/components/admin/TrafficTab";
 import { Btn, Field, TextInput } from "@/components/admin/shared";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -306,6 +307,7 @@ function Dashboard({ email }: { email: string }) {
 
       <div className="mt-6">
         {tab === "dashboard" && <Overview />}
+        {tab === "traffic" && <TrafficTab notify={notify} />}
         {tab === "clips" && <ClipsTab />}
         {tab === "anime" && <AnimeTab notify={notify} />}
         {tab === "categories" && <CategoriesTab notify={notify} />}
