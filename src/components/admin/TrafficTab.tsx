@@ -27,7 +27,7 @@ const DEVICE_LABELS: Record<string, string> = {
 const COUNTRY_NAMES = new Intl.DisplayNames(["en"], { type: "region" });
 
 function countryLabel(code: string): string {
-  if (!code || code === "XX" || code.length !== 2) return "Unknown";
+  if (!code || code === "XX" || code.length !== 2) return "Not available";
   try {
     return COUNTRY_NAMES.of(code) ?? code;
   } catch {
@@ -230,6 +230,10 @@ export function TrafficTab({ notify }: { notify: (msg: string, kind?: "ok" | "er
             </Card>
             <Card title="Countries">
               <BreakdownList rows={report.countries} labeller={countryLabel} />
+              <p className="mt-3 text-[11px] text-muted-foreground">
+                "Not available" means the visit arrived without a country tag — usually visits from
+                the editor preview, or a network that hides the location.
+              </p>
             </Card>
             <Card title="Devices">
               <BreakdownList
