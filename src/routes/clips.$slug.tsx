@@ -58,11 +58,10 @@ function Meta({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ShareRow({ title }: { title: string }) {
-  const [copied, setCopied] = useState(false);
+function ShareRow({ title, slug }: { title: string; slug: string }) {
+  const [copied, setCopied] = useState<"page" | "download" | null>(null);
 
-  const copyLink = async () => {
-    const url = window.location.href;
+  const copy = async (url: string, kind: "page" | "download") => {
     try {
       await navigator.clipboard.writeText(url);
     } catch {
@@ -73,9 +72,12 @@ function ShareRow({ title }: { title: string }) {
       document.execCommand("copy");
       input.remove();
     }
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 2000);
+    setCopied(kind);
+    window.setTimeout(() => setCopied(null), 2000);
   };
+
+  const copyLink = () => copy(window.location.href, "page");
+  const copyDownloadLink = () => copy(`${window.location.origin}/d/${slug}`, "download");
 
   const shareOnX = () => {
     const url = encodeURIComponent(window.location.href);
@@ -90,8 +92,12 @@ function ShareRow({ title }: { title: string }) {
   return (
     <div className="mt-4 flex flex-wrap gap-2" aria-label="Share clip">
       <Button type="button" size="sm" variant="outline" onClick={copyLink}>
-        {copied ? <Check aria-hidden /> : <Link2 aria-hidden />}
-        {copied ? "Copied!" : "Copy link"}
+        {copied === "page" ? <Check aria-hidden /> : <Link2 aria-hidden />}
+        {copied === "page" ? "Copied!" : "Copy link"}
+      </Button>
+      <Button type="button" size="sm" variant="outline" onClick={copyDownloadLink}>
+        {copied === "download" ? <Check aria-hidden /> : <Download aria-hidden />}
+        {copied === "download" ? "Copied!" : "Copy download link"}
       </Button>
       <Button type="button" size="sm" variant="outline" onClick={shareOnX}>
         X
@@ -171,7 +177,7 @@ function ClipPage() {
         <p className="mt-2 text-xs text-muted-foreground">
           Downloads open the external file link stored on this clip's record.
         </p>
-        <ShareRow title={clip.title} />
+        <ShareRow title={clip.title} slug={clip.slug} />
       </div>
 
       <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted-foreground">

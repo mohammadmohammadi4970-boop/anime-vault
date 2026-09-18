@@ -19,6 +19,33 @@ type ViewInput = { path: string; device: string; referrerKind: string };
 const DEVICES = ["mobile", "tablet", "desktop"];
 const REFERRERS = ["direct", "search", "social", "other"];
 
+/**
+ * The hosting network usually tags each request with a country. When it does
+ * not, we look the country up once from the connecting address; the address
+ * itself is never stored.
+ */
+async function resolveCountry(headers: Headers, ip: string): Promise<string> {
+  const fromHeaders =
+    headers.get("cf-ipcountry") ??
+    headers.get("x-vercel-ip-country") ??
+    headers.get("x-country-code") ??
+    headers.get("x-geo-country");
+  const code = (fromHeaders ?? "").slice(0, 2).toUpperCase();
+  if (/^[A-Z]{2}$/.test(code) && code !== "XX" && code !== "T1") return code;
+
+  if (!ip || ip === "unknown" || ip.startsWith("127.") || ip === "::1") return "XX";
+  try {
+    const res = await fetch(`https://ipapi.co/${encodeURIComponent(ip)}/country/`, {
+      signal: AbortSignal.timeout(1500),
+    });
+    if (!res.ok) return "XX";
+    const body = (await res.text()).trim().slice(0, 2).toUpperCase();
+    return /^[A-Z]{2}$/.test(body) ? body : "XX";
+  } catch {
+    return "XX";
+  }
+}
+
 async function dailyVisitorHash(ip: string, userAgent: string, salt: string): Promise<string> {
   const day = new Date().toISOString().slice(0, 10);
   const bytes = new TextEncoder().encode(`${ip}|${userAgent}|${day}|${salt}`);
@@ -49,11 +76,11 @@ export const recordPageView = createServerFn({ method: "POST" })
 
     const request = getRequest();
     const headers = request.headers;
-    const country = (headers.get("cf-ipcountry") ?? "XX").slice(0, 2).toUpperCase();
     const ip =
       headers.get("cf-connecting-ip") ??
       headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
       "unknown";
+    const country = await resolveCountry(headers, ip);
     const userAgent = headers.get("user-agent") ?? "unknown";
     const salt = process.env["SUPABASE_SERVICE_ROLE_KEY"] ?? "kuragawa-traffic";
 

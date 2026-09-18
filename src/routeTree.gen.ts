@@ -22,6 +22,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AnimeIndexRouteImport } from './routes/anime.index'
 import { Route as AnimeSlugRouteImport } from './routes/anime.$slug'
 import { Route as ClipsSlugRouteImport } from './routes/clips.$slug'
+import { Route as DSlugRouteImport } from './routes/d.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -88,6 +89,11 @@ const ClipsSlugRoute = ClipsSlugRouteImport.update({
   path: '/clips/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DSlugRoute = DSlugRouteImport.update({
+  id: '/d/$slug',
+  path: '/d/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/anime/$slug': typeof AnimeSlugRoute
   '/clips/$slug': typeof ClipsSlugRoute
+  '/d/$slug': typeof DSlugRoute
   '/anime/': typeof AnimeIndexRoute
 }
 export interface FileRoutesByTo {
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/anime/$slug': typeof AnimeSlugRoute
   '/clips/$slug': typeof ClipsSlugRoute
+  '/d/$slug': typeof DSlugRoute
   '/anime': typeof AnimeIndexRoute
 }
 export interface FileRoutesById {
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/anime/$slug': typeof AnimeSlugRoute
   '/clips/$slug': typeof ClipsSlugRoute
+  '/d/$slug': typeof DSlugRoute
   '/anime/': typeof AnimeIndexRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/anime/$slug'
     | '/clips/$slug'
+    | '/d/$slug'
     | '/anime/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/anime/$slug'
     | '/clips/$slug'
+    | '/d/$slug'
     | '/anime'
   id:
     | '__root__'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/anime/$slug'
     | '/clips/$slug'
+    | '/d/$slug'
     | '/anime/'
   fileRoutesById: FileRoutesById
 }
@@ -196,6 +208,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   AnimeSlugRoute: typeof AnimeSlugRoute
   ClipsSlugRoute: typeof ClipsSlugRoute
+  DSlugRoute: typeof DSlugRoute
   AnimeIndexRoute: typeof AnimeIndexRoute
 }
 
@@ -292,6 +305,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClipsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/d/$slug': {
+      id: '/d/$slug'
+      path: '/d/$slug'
+      fullPath: '/d/$slug'
+      preLoaderRoute: typeof DSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -308,6 +328,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   AnimeSlugRoute: AnimeSlugRoute,
   ClipsSlugRoute: ClipsSlugRoute,
+  DSlugRoute: DSlugRoute,
   AnimeIndexRoute: AnimeIndexRoute,
 }
 export const routeTree = rootRouteImport
