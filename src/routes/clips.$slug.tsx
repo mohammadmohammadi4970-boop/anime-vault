@@ -177,7 +177,7 @@ function ClipPage() {
         <p className="mt-2 text-xs text-muted-foreground">
           Downloads open the external file link stored on this clip's record.
         </p>
-        <ShareRow title={clip.title} />
+        <ShareRow title={clip.title} slug={clip.slug} />
       </div>
 
       <p className="mt-8 max-w-2xl text-sm leading-relaxed text-muted-foreground">

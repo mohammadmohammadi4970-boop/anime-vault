@@ -9,3 +9,4 @@
 - [x] Reduce PromoBanner to a subtle Request a Clip action
 - [x] Remove duplicate "Latest Clips" section; surface "Most Downloaded" with empty state
 - [x] Visitor traffic panel in admin (own/admin visits excluded; country, device, source, top pages, clip views vs downloads)
+- [x] Country detection fallbacks + "Not available" label; /d/<slug> counting download link with "Copy download link" share action
